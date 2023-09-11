@@ -5,6 +5,8 @@
 
 .env
 
+nodemon.json
+
 /output
 
 /uploads

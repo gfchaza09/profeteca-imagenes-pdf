@@ -48,10 +48,11 @@ class ImagenService {
       .replace(/-/g, "/")
       .replace(/\+/g, ".")
       .replace(/\n/g, "<br>");
+
     const text2Convertido = cleanHTML(text2)
       .replace(/-/g, "/")
       .replace(/\+/g, ".")
-      .replace(/\%0A/g, "<br>");
+      .replace(/\n/g, "<br>");
 
     const htmlContent = `
         <html>
@@ -61,8 +62,6 @@ class ImagenService {
             body {
               margin: 0;
               padding: 0;
-              color: ${cssConfig.textColor};
-              font-family: ${cssConfig.fontFamily};
             }
             img {
               position: absolute;
@@ -71,22 +70,33 @@ class ImagenService {
               width: 100%;
               height: 100%;
             }
-              .text1 {
+            .text1 {
                 position: absolute;
                 top: ${cssConfig.text1.top};
                 left: ${cssConfig.text1.left};
+                font-family: ${cssConfig.text1.fontFamily};
+                color: ${cssConfig.text1.textColor};
                 font-size: ${cssConfig.text1.fontSize};
                 font-weight: ${cssConfig.text1.fontWeight};
+                font-style: ${cssConfig.text1.fontStyle};
+                letter-spacing: ${cssConfig.text1.letterSpacing};
                 line-height: ${cssConfig.text1.lineHeight};
                 text-align: ${cssConfig.text1.textAlign};
+                text-shadow: ${cssConfig.text1.textShadow};
               }
               .text2 {
                 position: absolute;
                 top: ${cssConfig.text2.top};
                 left: ${cssConfig.text2.left};
+                font-family: ${cssConfig.text2.fontFamily};
+                color: ${cssConfig.text2.textColor};
                 font-size: ${cssConfig.text2.fontSize};
                 font-weight: ${cssConfig.text2.fontWeight};
+                font-style: ${cssConfig.text2.fontStyle};
+                letter-spacing: ${cssConfig.text2.letterSpacing};
+                line-height: ${cssConfig.text2.lineHeight};
                 text-align: ${cssConfig.text2.textAlign};
+                text-shadow: ${cssConfig.text2.textShadow};
               }
             </style>
           </head>
@@ -104,10 +114,6 @@ class ImagenService {
     const screenshot = await page.screenshot();
 
     await browser.close();
-
-    // Guarda la captura de pantalla en un archivo
-    const outputPath = path.join(__dirname, "../../output/imagenGenerada.jpg");
-    fs.writeFileSync(outputPath, screenshot);
 
     return screenshot;
   }
@@ -199,14 +205,7 @@ class ImagenService {
     // Cierra el navegador Puppeteer
     await browser.close();
 
-    // Guarda la captura de pantalla en un archivo
-    const outputPath = path.join(
-      __dirname,
-      "../../output/imagenGeneradaPuppeteer.jpg"
-    );
-    fs.writeFileSync(outputPath, screenshot);
-
-    return outputPath;
+    return screenshot;
   }
 }
 

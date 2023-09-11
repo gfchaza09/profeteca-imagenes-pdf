@@ -1,5 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
+import path from "path";
+import fs from "fs";
 
 // Importacion de Router
 import router from "./routers/index.routes";
@@ -34,6 +36,29 @@ app.get("/api", (req: Request, res: Response) => {
 
 // Router Api
 app.use(router);
+//--------------------------------------------
+// Router Frontend CLient
+app.use(express.static(path.join(__dirname, "../public/dist/app")));
+app.use("/", express.static("../public/dist/app"));
+
+app.use(function (req, res, next) {
+  //Si el formato aceptado no es "html",
+  //significa que la solicitud no está buscando una página HTML y se pasa al siguiente middleware
+  const accept = req.accepts("html", "json", "xml");
+  if (accept !== "html") {
+    return next();
+  }
+
+  // Si la solicitud acepta el formato "html", se verifica si la ruta de la solicitud tiene una extensión de archivo
+  const ext = path.extname(req.path);
+  if (ext !== "") {
+    return next();
+  }
+
+  fs.createReadStream(
+    path.join(__dirname, "../public/dist/app/") + "index.html"
+  ).pipe(res);
+});
 //--------------------------------------------
 
 // Ruta inexistente

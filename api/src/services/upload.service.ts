@@ -50,17 +50,11 @@ class UploadService {
 
   async postJSONConfig(req: Request) {
     const { nombre } = req.body;
-
     if (!nombre) throw new StatusError("Nombre requerido", 400);
-
     if (!req.file) throw new StatusError("Falló subida de archivo", 400);
-
     const jsonPath = req.file.path;
-
     const newJSON = new tipoModel({ path: jsonPath, nombre });
-
     await newJSON.save();
-
     return "Archivo JSON subido correctamente";
   }
 }

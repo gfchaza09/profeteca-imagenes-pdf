@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 
+import { showErrorAlert, showSuccessAlert } from 'src/app/shared/utils/swal';
 import { Image } from '../../interfaces/image.interface';
 import { ApiService } from '../../services/api.service';
-import { showErrorAlert, showSuccessAlert } from 'src/app/shared/utils/swal';
-import { DomSanitizer } from '@angular/platform-browser';
+import { cleanHTML } from '../../utils/cleanerText';
 
 @Component({
   templateUrl: './config-page.component.html',
@@ -16,26 +17,36 @@ export class ConfigPageComponent implements OnInit {
   private apiService = inject(ApiService);
   myForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
+    text1: ['Texto1%0Ade prueba'],
+    text2: ['Texto2 de prueba'],
     backgroundImage: ['', Validators.required],
     css: this.fb.group({
-      textColor: ['', Validators.required],
-      fontFamilyUrl: ['', Validators.required],
-      fontFamily: ['', Validators.required],
+      fontFamilyUrl: [''],
       text1: this.fb.group({
-        top: ['', Validators.required],
-        left: ['', Validators.required],
-        fontSize: ['', Validators.required],
-        fontWeight: ['', Validators.required],
-        lineHeight: ['', Validators.required],
-        textAlign: ['', Validators.required],
+        top: [''],
+        left: [''],
+        fontFamily: [''],
+        textColor: [''],
+        fontSize: [''],
+        fontWeight: [''],
+        fontStyle: [''],
+        letterSpacing: [''],
+        lineHeight: [''],
+        textAlign: [''],
+        textShadow: [''],
       }),
       text2: this.fb.group({
-        top: ['', Validators.required],
-        left: ['', Validators.required],
-        fontSize: ['', Validators.required],
-        fontWeight: ['', Validators.required],
-        lineHeight: ['', Validators.required],
-        textAlign: ['', Validators.required],
+        top: [''],
+        left: [''],
+        fontFamily: [''],
+        textColor: [''],
+        fontSize: [''],
+        fontWeight: [''],
+        fontStyle: [''],
+        letterSpacing: [''],
+        lineHeight: [''],
+        textAlign: [''],
+        textShadow: [''],
       }),
     }),
   });
@@ -46,6 +57,15 @@ export class ConfigPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.apiService.getImages().subscribe((images) => (this.images = images));
+
+    this.myForm.valueChanges.subscribe(() => {
+      this.generatePreview();
+    });
+  }
+
+  get formValue() {
+    const { text1, text2, ...formValue } = this.myForm.value;
+    return formValue;
   }
 
   onImageSelected(event: any) {
@@ -54,59 +74,90 @@ export class ConfigPageComponent implements OnInit {
       this.selectedImage = this.images.find(
         (image) => image.path === selectedImagePath
       );
+      this.generatePreview();
     }
-    this.generatePreview();
   }
 
   generatePreview() {
+    if (!this.selectedImage) return;
     const formValue = this.myForm.value;
+    const base64Image = `data:image/jpeg;base64,${this.selectedImage!.base64}`;
 
-    // Construir la vista previa en HTML usando los valores del formulario
-    const previewHTML = `
-      <head>
-        <style>
-          @import url(${formValue.css.fontFamilyUrl});
-          body {
-            margin: 0;
-            padding: 0;
-            color: ${formValue.css.textColor};
-            font-family: ${formValue.css.fontFamily};
-          }
-          img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-          }
-          .text1 {
-            position: absolute;
-            top: ${formValue.css.text1.top};
-            left: ${formValue.css.text1.left};
-            font-size: ${formValue.css.text1.fontSize};
-            font-weight: ${formValue.css.text1.fontWeight};
-            line-height: ${formValue.css.text1.lineHeight};
-            text-align: ${formValue.css.text1.textAlign};
-          }
-          .text2 {
-            position: absolute;
-            top: ${formValue.css.text2.top};
-            left: ${formValue.css.text2.left};
-            font-size: ${formValue.css.text2.fontSize};
-            font-weight: ${formValue.css.text2.fontWeight};
-            text-align: ${formValue.css.text2.textAlign};
-          }
-        </style>
-      </head>
-      <body>
-        <img src="data:image/jpeg;base64,${this.selectedImage?.base64}" alt="bg" />
-        <div class="text1">Texto 1 de ejemplo</div>
-        <div class="text2">Texto 2 de ejemplo</div>
-      </body>
-    `;
+    const img = new Image();
 
-    // Asignar la vista previa al componente
-    this.previewHTML = this.sanitizer.bypassSecurityTrustHtml(previewHTML);
+    img.onload = () => {
+      const text1Convertido = formValue.text1
+        .replace(/-/g, '/')
+        .replace(/\+/g, '.')
+        .replace(/%0A/g, '<br>');
+
+      const text2Convertido = cleanHTML(formValue.text2)
+        .replace(/-/g, '/')
+        .replace(/\+/g, '.')
+        .replace(/%0A/g, '<br>');
+
+      const previewHTML = `
+        <head>
+          <style>
+            @import url(${formValue.css.fontFamilyUrl});
+            body {
+              margin: 0;
+              padding: 0;
+              width: ${img.width / 2}px;
+              height: ${img.height / 2}px;
+            }
+            .img {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: ${img.width / 2}px;
+              height: ${img.height / 2}px;
+              border: 1px solid black;
+              user-select: none;
+            }
+            .text1 {
+              position: absolute;
+              top: ${formValue.css.text1.top / 2}px;
+              left: ${formValue.css.text1.left / 2}px;
+              font-family: ${formValue.css.text1.fontFamily};
+              color: ${formValue.css.text1.textColor};
+              font-size: ${formValue.css.text1.fontSize / 2}px;
+              font-weight: ${formValue.css.text1.fontWeight};
+              font-style: ${formValue.css.text1.fontStyle};
+              letter-spacing: ${formValue.css.text1.letterSpacing};
+              line-height: ${formValue.css.text1.lineHeight};
+              text-align: ${formValue.css.text1.textAlign};
+              text-shadow: ${formValue.css.text1.textShadow};
+              white-space: nowrap;
+            }
+            .text2 {
+              position: absolute;
+              top: ${formValue.css.text2.top / 2}px;
+              left: ${formValue.css.text2.left / 2}px;
+              font-family: ${formValue.css.text2.fontFamily};
+              color: ${formValue.css.text2.textColor};
+              font-size: ${formValue.css.text2.fontSize / 2}px;
+              font-weight: ${formValue.css.text2.fontWeight};
+              font-style: ${formValue.css.text2.fontStyle};
+              letter-spacing: ${formValue.css.text2.letterSpacing};
+              line-height: ${formValue.css.text2.lineHeight};
+              text-align: ${formValue.css.text2.textAlign};
+              text-shadow: ${formValue.css.text2.textShadow};
+              white-space: nowrap;
+            }
+          </style>
+        </head>
+        <body>
+          <img src=${base64Image} alt="bg" class="img"/>
+          <div class="text1">${text1Convertido}</div>
+          <div class="text2">${text2Convertido}</div>
+        </body>
+      `;
+      // Asignar la vista previa al componente
+      this.previewHTML = this.sanitizer.bypassSecurityTrustHtml(previewHTML);
+    };
+
+    img.src = base64Image;
   }
 
   onSubmit() {
@@ -114,7 +165,7 @@ export class ConfigPageComponent implements OnInit {
       this.myForm.markAllAsTouched();
       return;
     }
-    const form = this.myForm.value;
+    const { text1, text2, ...form } = this.myForm.value;
     const name = this.myForm.get('name')!.value;
 
     const jsonBlob = new Blob([JSON.stringify(form)], {
