@@ -1,0 +1,46 @@
+<div class="container mt-5">
+  <h1>Generador de Imágenes</h1>
+  <form [formGroup]="myForm">
+    <div class="form-group mb-3">
+      <label for="config">Selecciona una configuración:</label>
+      <select id="config" formControlName="config" class="form-control">
+        <option value="">Selecciona una configuración</option>
+        <option *ngFor="let config of availableConfigs" [value]="config.nombre">
+          {{ config.nombre }}
+        </option>
+      </select>
+      <span *ngIf="isValidField('config')" class="form-text text-danger">
+        Campo requerido
+      </span>
+    </div>
+    <div class="form-group mb-3">
+      <label for="text1">Texto 1:</label>
+      <input
+        type="text"
+        id="text1"
+        formControlName="text1"
+        class="form-control"
+        placeholder="Ingrese el Texto 1"
+      />
+      <span *ngIf="isValidField('text1')" class="form-text text-danger">
+        Campo requerido
+      </span>
+    </div>
+    <div class="form-group mb-3">
+      <label for="text2">Texto 2:</label>
+      <input
+        type="text"
+        id="text2"
+        formControlName="text2"
+        class="form-control"
+        placeholder="Ingrese el Texto 2"
+      />
+      <span *ngIf="isValidField('text2')" class="form-text text-danger">
+        Campo requerido
+      </span>
+    </div>
+    <button (click)="generateImage()" class="btn btn-primary">
+      Generar Imagen
+    </button>
+  </form>
+</div>

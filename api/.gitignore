@@ -1,0 +1,14 @@
+
+/node_modules
+
+/src/temp
+
+.env
+
+/output
+
+/uploads
+
+/dist
+
+/LOGS

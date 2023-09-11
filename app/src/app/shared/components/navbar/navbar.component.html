@@ -1,0 +1,33 @@
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/dashboard">
+      <img
+        class="img-thumbnail"
+        src="assets/tramicode.png"
+        alt="logo"
+        width="300"
+      />
+    </a>
+    <ul class="navbar-nav flex-row gap-5">
+      <li *ngFor="let menuItem of menuItems" class="nav-item">
+        <a
+          class="nav-link"
+          routerLinkActive="active"
+          aria-current="page"
+          [routerLink]="menuItem.route"
+        >
+          <i [class]="menuItem.icon"></i> {{ menuItem.title }}</a
+        >
+      </li>
+    </ul>
+    <div class="d-flex gap-2 align-items-center me-4">
+      <img
+        class="img-thumbnail"
+        src="assets/img-perfil.png"
+        alt="avatar"
+        width="45"
+      />
+      <button class="btn btn-outline-danger" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</nav>

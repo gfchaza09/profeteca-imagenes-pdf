@@ -1,0 +1,204 @@
+<div class="container my-5">
+  <h1>Configuraciones</h1>
+  <div class="row">
+    <!-- Columna para el formulario de entrada de datos -->
+    <div class="col-md-6">
+      <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+        <div class="form-group mb-2">
+          <label for="name">Nombre de configuración:</label>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            class="form-control"
+          />
+        </div>
+
+        <div class="form-group mb-2">
+          <label for="backgroundImage">Imagen de fondo:</label>
+          <select
+            id="backgroundImage"
+            formControlName="backgroundImage"
+            (change)="onImageSelected($event)"
+            class="form-control"
+          >
+            <option *ngFor="let image of images" [value]="image.path">
+              {{ image.descripcion }}
+            </option>
+          </select>
+        </div>
+
+        <div formGroupName="css">
+          <div class="form-group mb-2">
+            <label for="textColor">Color de texto:</label>
+            <input
+              type="text"
+              id="textColor"
+              formControlName="textColor"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group mb-2">
+            <label for="fontFamilyUrl">URL de la fuente:</label>
+            <input
+              type="text"
+              id="fontFamilyUrl"
+              formControlName="fontFamilyUrl"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group mb-2">
+            <label for="fontFamily">Familia de fuentes:</label>
+            <input
+              type="text"
+              id="fontFamily"
+              formControlName="fontFamily"
+              class="form-control"
+            />
+          </div>
+
+          <!-- Text1 -->
+          <div formGroupName="text1">
+            <div class="form-group mb-2">
+              <label for="text1Top">Texto 1 - Top:</label>
+              <input
+                type="text"
+                id="text1Top"
+                formControlName="top"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group mb-2">
+              <label for="text1Left">Texto 1 - Left:</label>
+              <input
+                type="text"
+                id="text1Left"
+                formControlName="left"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group mb-2">
+              <label for="text1FontSize">Texto 1 - Tamaño de fuente:</label>
+              <input
+                type="text"
+                id="text1FontSize"
+                formControlName="fontSize"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group mb-2">
+              <label for="text1FontWeight">Texto 1 - Grosor de fuente:</label>
+              <input
+                type="text"
+                id="text1FontWeight"
+                formControlName="fontWeight"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group mb-2">
+              <label for="text1LineHeight">Texto 1 - Altura de línea:</label>
+              <input
+                type="text"
+                id="text1LineHeight"
+                formControlName="lineHeight"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group mb-2">
+              <label for="text1TextAlign">Texto 1 - Alineación de texto:</label>
+              <input
+                type="text"
+                id="text1TextAlign"
+                formControlName="textAlign"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <!-- Text2 -->
+          <div formGroupName="text2">
+            <div class="form-group mb-2">
+              <label for="text2Top">Texto 2 - Top:</label>
+              <input
+                type="text"
+                id="text2Top"
+                formControlName="top"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group mb-2">
+              <label for="text2Left">Texto 2 - Left:</label>
+              <input
+                type="text"
+                id="text2Left"
+                formControlName="left"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group mb-2">
+              <label for="text2FontSize">Texto 2 - Tamaño de fuente:</label>
+              <input
+                type="text"
+                id="text2FontSize"
+                formControlName="fontSize"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group mb-2">
+              <label for="text2FontWeight">Texto 2 - Peso de fuente:</label>
+              <input
+                type="text"
+                id="text2FontWeight"
+                formControlName="fontWeight"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group mb-2">
+              <label for="text2LineHeight">Texto 2 - Altura de línea:</label>
+              <input
+                type="text"
+                id="text2LineHeight"
+                formControlName="lineHeight"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group mb-2">
+              <label for="text2TextAlign">Texto 2 - Alineación de texto:</label>
+              <input
+                type="text"
+                id="text2TextAlign"
+                formControlName="textAlign"
+                class="form-control"
+              />
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Subir JSON</button>
+      </form>
+    </div>
+    <!-- Columna para mostrar el JSON generado -->
+    <div class="col-md-6">
+      <div class="card mb-5">
+        <!-- <h5 class="card-title">Imagen seleccionada:</h5>
+        <div
+          *ngIf="!selectedImage; else selectedImageSection"
+          class="card-body"
+        >
+          <p class="card-text">Todavía no has seleccionado imagen</p>
+        </div>
+        <ng-template #selectedImageSection>
+          <img
+            [src]="'data:image/png;base64,' + selectedImage!.base64"
+            alt="imagen-seleccionada"
+            class="card-img-bottom"
+          />
+        </ng-template> -->
+        <h5 class="card-title">Vista previa:</h5>
+        <iframe [srcdoc]="previewHTML" class="card-body"></iframe>
+      </div>
+
+      <pre>{{ myForm.value | json }}</pre>
+    </div>
+  </div>
+</div>
