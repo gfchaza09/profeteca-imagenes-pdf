@@ -16,6 +16,13 @@ uploadRouter.post(
   UploadController.postBackgroundImage
 );
 
+// [DELETE] 🌐/api/uploads/bg/:id
+uploadRouter.delete(
+  "/bg/:id",
+  verificarToken,
+  UploadController.deleteBackgroundImage
+);
+
 // [GET] 🌐/api/uploads/json
 uploadRouter.get("/json", verificarToken, UploadController.getConfigs);
 
@@ -25,6 +32,13 @@ uploadRouter.post(
   verificarToken,
   uploadJSON.single("config"),
   UploadController.postJSONConfig
+);
+
+// [DELETE] 🌐/api/uploads/json/:id
+uploadRouter.delete(
+  "/json/:id",
+  verificarToken,
+  UploadController.deleteJSONConfig
 );
 
 export default uploadRouter;

@@ -4,4 +4,5 @@ export interface GetConfigs {
 
 export interface Config {
   nombre: string;
+  _id: string;
 }

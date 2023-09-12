@@ -1,9 +1,25 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { showURLImage } from 'src/app/shared/utils/swal';
 import { environment } from 'src/environments/environments';
 import { Config } from '../../interfaces/config.interface';
 import { ApiService } from '../../services/api.service';
+
+const noHtmlOrSlashValidator = (control: FormControl) => {
+  const value = control.value as string;
+  if (
+    value &&
+    (value.includes('<') || value.includes('>') || value.includes('/'))
+  ) {
+    return { invalidInput: true };
+  }
+  return null;
+};
 
 @Component({
   templateUrl: './home-page.component.html',
@@ -15,16 +31,28 @@ export class HomePageComponent implements OnInit {
   private apiService = inject(ApiService);
   public myForm: FormGroup = this.fb.group({
     config: ['', Validators.required],
-    text1: ['', Validators.required],
-    text2: ['', Validators.required],
+    text1: ['', [Validators.required, noHtmlOrSlashValidator]],
+    text2: ['', [Validators.required, noHtmlOrSlashValidator]],
   });
 
-  public availableConfigs: Config[] = [];
+  public availableConfigs: Config[] | null = [];
+  public loading: boolean = false;
+
+  public customErrorMessages = {
+    required: 'Este campo es requerido.',
+    invalidInput: 'El campo contiene caracteres inválidos.',
+  };
 
   ngOnInit(): void {
-    this.apiService
-      .getConfigs()
-      .subscribe((configs) => (this.availableConfigs = configs));
+    this.getConfigsList();
+  }
+
+  getConfigsList() {
+    this.loading = true;
+    this.apiService.getConfigs().subscribe((configs) => {
+      this.availableConfigs = configs;
+      this.loading = false;
+    });
   }
 
   isValidField(field: string): boolean {

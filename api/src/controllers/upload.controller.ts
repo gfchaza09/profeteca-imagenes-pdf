@@ -39,6 +39,22 @@ class UploadController {
     }
   }
 
+  async deleteBackgroundImage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await UploadService.deleteBackgroundImage(req);
+      res.status(204).send({ message: data });
+    } catch (err: StatusError | unknown) {
+      logError(err);
+      logWarning(`${req.method} ${req.originalUrl} ${res.statusCode}`);
+      if (err instanceof StatusError) {
+        next(err);
+      } else {
+        const statusError = new StatusError("Internal Server Error", 500);
+        next(statusError);
+      }
+    }
+  }
+
   async getConfigs(req: Request, res: Response, next: NextFunction) {
     try {
       const data = await UploadService.getConfigs();
@@ -59,6 +75,22 @@ class UploadController {
     try {
       const data = await UploadService.postJSONConfig(req);
       res.status(200).json({ message: data });
+    } catch (err: StatusError | unknown) {
+      logError(err);
+      logWarning(`${req.method} ${req.originalUrl} ${res.statusCode}`);
+      if (err instanceof StatusError) {
+        next(err);
+      } else {
+        const statusError = new StatusError("Internal Server Error", 500);
+        next(statusError);
+      }
+    }
+  }
+
+  async deleteJSONConfig(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await UploadService.deleteJSONConfig(req);
+      res.status(204).send({ message: data });
     } catch (err: StatusError | unknown) {
       logError(err);
       logWarning(`${req.method} ${req.originalUrl} ${res.statusCode}`);

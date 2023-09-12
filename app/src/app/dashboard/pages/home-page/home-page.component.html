@@ -22,8 +22,20 @@
         class="form-control"
         placeholder="Ingrese el Texto 1"
       />
-      <span *ngIf="isValidField('text1')" class="form-text text-danger">
-        Campo requerido
+      <span
+        *ngIf="
+          myForm.get('text1')?.touched &&
+          myForm.get('text1')?.hasError('required')
+        "
+        class="form-text text-danger"
+      >
+        {{ customErrorMessages.required }}
+      </span>
+      <span
+        *ngIf="myForm.get('text1')?.hasError('invalidInput')"
+        class="form-text text-danger"
+      >
+        {{ customErrorMessages.invalidInput }}
       </span>
     </div>
     <div class="form-group mb-3">
@@ -35,12 +47,30 @@
         class="form-control"
         placeholder="Ingrese el Texto 2"
       />
-      <span *ngIf="isValidField('text2')" class="form-text text-danger">
-        Campo requerido
+      <span
+        *ngIf="
+          myForm.get('text2')?.touched &&
+          myForm.get('text2')?.hasError('required')
+        "
+        class="form-text text-danger"
+      >
+        {{ customErrorMessages.required }}
+      </span>
+      <span
+        *ngIf="myForm.get('text2')?.hasError('invalidInput')"
+        class="form-text text-danger"
+      >
+        {{ customErrorMessages.invalidInput }}
       </span>
     </div>
     <button (click)="generateImage()" class="btn btn-primary">
       Generar Imagen
     </button>
   </form>
+
+  <hr />
+
+  <h2>Administrar configuraciones</h2>
+
+  <dashboard-config-table [configs]="availableConfigs" [loading]="loading" />
 </div>

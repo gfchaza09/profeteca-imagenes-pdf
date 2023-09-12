@@ -1,22 +1,38 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { showErrorAlert, showSuccessAlert } from 'src/app/shared/utils/swal';
 import { ApiService } from '../../services/api.service';
 import { catchError } from 'rxjs';
+import { Image } from '../../interfaces/image.interface';
 
 @Component({
   templateUrl: './upload-page.component.html',
   styles: [],
 })
-export class UploadPageComponent {
+export class UploadPageComponent implements OnInit {
   private fb = inject(FormBuilder);
   private apiService = inject(ApiService);
-  selectedImage?: File;
+  public selectedImage?: File;
   public myForm: FormGroup = this.fb.group({
     foto: ['', Validators.required],
     descripcion: ['', Validators.required],
   });
+
+  public loading: boolean = false;
+  public images: Image[] | null = [];
+
+  ngOnInit(): void {
+    this.getImagesList();
+  }
+
+  getImagesList() {
+    this.loading = true;
+    this.apiService.getImages().subscribe((images) => {
+      this.images = images;
+      this.loading = false;
+    });
+  }
 
   isValidField(field: string): boolean {
     return (
@@ -54,6 +70,8 @@ export class UploadPageComponent {
       } else {
         showSuccessAlert(typeof res === 'string' ? res : 'Acción completada');
         this.myForm.reset();
+
+        this.getImagesList();
       }
     });
   }

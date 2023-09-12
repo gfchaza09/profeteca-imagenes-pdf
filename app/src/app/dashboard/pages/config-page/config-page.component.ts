@@ -51,12 +51,14 @@ export class ConfigPageComponent implements OnInit {
     }),
   });
 
-  public images: Image[] = [];
+  public images: Image[] | null = [];
   public selectedImage?: Image | null;
   public previewHTML: any = '';
 
   ngOnInit(): void {
-    this.apiService.getImages().subscribe((images) => (this.images = images));
+    this.apiService.getImages().subscribe((images) => {
+      this.images = images;
+    });
 
     this.myForm.valueChanges.subscribe(() => {
       this.generatePreview();
@@ -70,7 +72,7 @@ export class ConfigPageComponent implements OnInit {
 
   onImageSelected(event: any) {
     const selectedImagePath = event?.target?.value;
-    if (selectedImagePath) {
+    if (selectedImagePath && this.images) {
       this.selectedImage = this.images.find(
         (image) => image.path === selectedImagePath
       );

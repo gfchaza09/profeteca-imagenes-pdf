@@ -22,7 +22,46 @@ La configuración básica se encuentra en el archivo `package.json`. Asegúrate 
 
 ### Iniciar sesión
 
-<!--! Completar -->
+La función de inicio de sesión permite a los usuarios autenticarse en la aplicación para acceder a sus funcionalidades. Los usuarios deben proporcionar sus credenciales para iniciar sesión. Las características clave de esta funcionalidad incluyen:
+
+- Iniciar Sesión: Los usuarios pueden acceder a la página de inicio de sesión a través de la ruta /auth/login. La página de inicio de sesión proporciona un formulario donde los usuarios ingresan su nombre de usuario y contraseña. Una vez autenticados, tienen acceso a las demás funcionalidades de la aplicación. 
+
+**NOTA**: Recuerda configurar tu usuario y contraseña en la API.
+
+### Generador de Imágenes
+El generador de imágenes es una funcionalidad central de la aplicación que permite a los usuarios crear imágenes dinámicas utilizando configuraciones predefinidas o personalizadas. Las características clave incluyen:
+
+- Generar Imágenes: Los usuarios pueden crear imágenes mediante la selección de configuraciones y la entrada de texto. La misma se encuentra en una URL que se muestra a través de SweetAlert.
+
+- Configuraciones Personalizadas: Los usuarios pueden personalizar las configuraciones CSS para los elementos de texto en la imagen.
+
+- Vista Previa de la Imagen: Se proporciona una vista previa de la imagen generada con las configuraciones seleccionadas.
+
+- Eliminar Configuraciones: Los usuarios pueden eliminar configuraciones personalizadas que ya no necesiten.
+
+### Administrador de Imágenes
+El administrador de imágenes permite a los usuarios cargar imágenes de fondo, agregar descripciones y administrar las imágenes existentes. Las características clave incluyen:
+
+- Subir Imágenes: Los usuarios pueden cargar imágenes de fondo y agregar descripciones relacionadas con esas imágenes.
+
+- Eliminar Imágenes: Los usuarios pueden eliminar imágenes previamente cargadas si ya no son necesarias.
+
+### Subida de Configuración
+La subida de configuración es una funcionalidad que permite a los usuarios generar archivos JSON con la configuración CSS de los textos que se utilizarán para la creación de imágenes. Las características clave incluyen:
+
+- Generar Archivos JSON: Los usuarios pueden crear archivos JSON que contienen la configuración CSS de los textos.
+
+- Vista Previa de la Configuración: Los usuarios pueden ver una vista previa de la configuración CSS y cómo afectará a la generación de imágenes.
+
+- Datos del Archivo JSON: Se muestran los datos del archivo JSON resultante para su revisión.
+
+Estas son las funcionalidades adicionales que se han agregado a la documentación. Si hay más funcionalidades específicas que desees documentar o detalles adicionales que desees agregar, no dudes en proporcionar más información, y estaré encantado de incluirla en la documentación.
+
+**NOTA**: En los textos que generan imágenes, no se pueden utilizar etiquetas HTML. Además, ciertos caracteres especiales tienen reemplazos específicos:
+
+- Los guiones "-" se reemplazarán por barras diagonales "/".
+- Los signos "+" se reemplazarán por puntos ".".
+- Los caracteres "%0A" se reemplazarán por saltos de línea.
 
 <a name="rutas"></a>
 
@@ -33,16 +72,16 @@ A continuación se describen las rutas disponibles en la aplicación:
 - **Iniciar Sesión**: `/auth/login`
   - Descripción: Página de inicio de sesión para acceder a la aplicación.
   
-- **Lista de Tickets**: `/dashboard/home`
-  - Descripción: 
+- **Generador de imágenes/Administrador de configuraciones**: `/dashboard/home`
+  - Descripción: Página principal que actúa como generador de imágenes. También permite eliminar configuraciones.
   - Requisitos: Requiere autenticación.
 
-- **Lista de Tickets**: `/dashboard/upload`
-  - Descripción: 
+- **Subida de imagen/Administrador de imágenes**: `/dashboard/upload`
+  - Descripción: Página que permite a los usuarios cargar imágenes y agregar descripciones. También permite eliminar imágenes.
   - Requisitos: Requiere autenticación.
 
-- **Detalles del Ticket**: `/dashboard/config`
-  - Descripción: 
+- **Subida de configuración**: `/dashboard/config`
+  - Descripción: Página donde se generarán los archivos JSON con la configuración CSS de los textos que se utilizarán para la creación de la imagen. Se dispondrá de una vista previa de la imagen y su configuración CSS, como así también se verán los datos del archivo JSON.
   - Requisitos: Requiere autenticación.
 
 - **Ruta por Defecto**: `/**`
@@ -57,6 +96,7 @@ Las tecnologías utilizadas en el front-end de Trami-Imagenes son las siguientes
 - **Angular**: Angular es un framework de desarrollo de aplicaciones web de código abierto basado en TypeScript. Proporciona una estructura robusta para construir aplicaciones web modernas y dinámicas.
 - **Bootstrap**: Bootstrap es un framework de diseño CSS ampliamente utilizado que ofrece una amplia variedad de componentes y estilos predefinidos. Facilita la creación de interfaces de usuario atractivas y responsivas.
 - **SweetAlert2**: SweetAlert2 es una biblioteca que permite mostrar alertas y modales personalizables en tu aplicación. Ofrece una experiencia de usuario más interactiva y atractiva al mostrar información importante.
+- **ngx-pagination**: ngx-pagination es una biblioteca para Angular que agrega capacidades de paginación a las listas y tablas en tu aplicación. Esto permite una mejor navegación y organización de los datos.
 - **TypeScript**: Es un lenguaje de programación que amplía las capacidades de JavaScript al agregar características de tipos estáticos y otros elementos de programación orientada a objetos.
 - **Zone.js**: Es una biblioteca que proporciona detección y reacción a cambios asincrónicos en aplicaciones Angular.
 
