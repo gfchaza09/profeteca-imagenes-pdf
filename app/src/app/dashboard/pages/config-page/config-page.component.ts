@@ -71,10 +71,10 @@ export class ConfigPageComponent implements OnInit {
   }
 
   onImageSelected(event: any) {
-    const selectedImagePath = event?.target?.value;
-    if (selectedImagePath && this.images) {
+    const selectedImageId = event?.target?.value;
+    if (selectedImageId && this.images) {
       this.selectedImage = this.images.find(
-        (image) => image.path === selectedImagePath
+        (image) => image.id === selectedImageId
       );
       this.generatePreview();
     }

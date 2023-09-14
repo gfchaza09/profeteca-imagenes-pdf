@@ -6,7 +6,7 @@ import usuarioRouter from "./usuario.routes";
 
 const router = Router();
 
-// Ruta modelo Imagenes
+// Ruta Imagenes
 router.use("/imagen", imagenRouter);
 
 // Ruta Uploads

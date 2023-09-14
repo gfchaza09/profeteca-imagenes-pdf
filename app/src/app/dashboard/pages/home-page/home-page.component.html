@@ -5,7 +5,7 @@
       <label for="config">Selecciona una configuración:</label>
       <select id="config" formControlName="config" class="form-control">
         <option value="">Selecciona una configuración</option>
-        <option *ngFor="let config of availableConfigs" [value]="config.nombre">
+        <option *ngFor="let config of availableConfigs" [value]="config._id">
           {{ config.nombre }}
         </option>
       </select>

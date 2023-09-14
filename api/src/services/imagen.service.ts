@@ -6,6 +6,9 @@ import sizeOf from "image-size";
 import { StatusError } from "../classes/StatusError";
 import { cleanHTML } from "../utils/cleanerText";
 import config from "../config/config";
+import tipoModel from "../models/tipo.model";
+import { isValidObjectId } from "mongoose";
+import imagenModel from "../models/imagen.model";
 
 class ImagenService {
   constructor() {}
@@ -13,109 +16,134 @@ class ImagenService {
   async getImage(req: Request) {
     const { text1, text2, tipo } = req.params;
 
-    // Leer el archivo JSON asociado con el "tipo"
-    const jsonPath = path.join(
-      __dirname,
-      `../../${config.STORAGE}config-${tipo}.json`
-    );
-    const configJSON = JSON.parse(fs.readFileSync(jsonPath, "utf-8"));
+    if (!isValidObjectId(tipo))
+      throw new StatusError("El id de la configuración no es válido", 400);
 
-    // Extraer la configuración de CSS y la imagen de fondo del JSON
-    const cssConfig = configJSON.css;
-    const backgroundImage = configJSON.backgroundImage;
+    const configuracion = await tipoModel.findById(tipo);
 
-    const imagePath = path.join(__dirname, `../../${backgroundImage}`);
-    const dimensions = sizeOf(imagePath);
+    if (!configuracion || configuracion.isDeleted === true)
+      throw new StatusError("Configuración no encontrada", 404);
 
-    const { width: originalWidth, height: originalHeight } = dimensions;
+    try {
+      // Leer el archivo JSON asociado con el "tipo"
+      const jsonPath = path.join(__dirname, `../../${configuracion.path}`);
+      const configJSON = JSON.parse(fs.readFileSync(jsonPath, "utf-8"));
 
-    const browser = await puppeteer.launch({ headless: "new" });
+      // Extraer la configuración de CSS y la imagen de fondo del JSON
+      const cssConfig = configJSON.css;
+      const backgroundImage = configJSON.backgroundImage;
 
-    const page = await browser.newPage();
+      if (!isValidObjectId(backgroundImage))
+        throw new StatusError("El id de la imagen no es válido", 400);
 
-    // Configurar el tamaño de la página para que se adapte a las dimensiones de la imagen
-    await page.setViewport({
-      width: originalWidth || 800, // Por defecto width: 800
-      height: originalHeight || 600, // Por defecto height: 800
-      deviceScaleFactor: 1,
-    });
+      const imagen = await imagenModel.findById(backgroundImage);
 
-    const imageBuffer = fs.readFileSync(imagePath);
-    const imageBase64 = imageBuffer.toString("base64");
+      if (!imagen || imagen.isDeleted === true)
+        throw new StatusError("Imagen no encontrada", 404);
 
-    // Reemplaza "-" por "/", "+" por ".", "%0A" por "<br>"
-    const text1Convertido = cleanHTML(text1)
-      .replace(/-/g, "/")
-      .replace(/\+/g, ".")
-      .replace(/\n/g, "<br>");
+      const imagePath = path.join(__dirname, `../../${imagen.path}`);
+      const dimensions = sizeOf(imagePath);
 
-    const text2Convertido = cleanHTML(text2)
-      .replace(/-/g, "/")
-      .replace(/\+/g, ".")
-      .replace(/\n/g, "<br>");
+      const { width: originalWidth, height: originalHeight } = dimensions;
 
-    const htmlContent = `
-        <html>
-          <head>
-            <style>
-            @import url(${cssConfig.fontFamilyUrl});
-            body {
-              margin: 0;
-              padding: 0;
-            }
-            img {
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-            }
-            .text1 {
-                position: absolute;
-                top: ${cssConfig.text1.top};
-                left: ${cssConfig.text1.left};
-                font-family: ${cssConfig.text1.fontFamily};
-                color: ${cssConfig.text1.textColor};
-                font-size: ${cssConfig.text1.fontSize};
-                font-weight: ${cssConfig.text1.fontWeight};
-                font-style: ${cssConfig.text1.fontStyle};
-                letter-spacing: ${cssConfig.text1.letterSpacing};
-                line-height: ${cssConfig.text1.lineHeight};
-                text-align: ${cssConfig.text1.textAlign};
-                text-shadow: ${cssConfig.text1.textShadow};
+      const browser = await puppeteer.launch({
+        headless: "new",
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
+
+      const page = await browser.newPage();
+
+      // Configurar el tamaño de la página para que se adapte a las dimensiones de la imagen
+      await page.setViewport({
+        width: originalWidth || 800, // Por defecto width: 800
+        height: originalHeight || 600, // Por defecto height: 800
+        deviceScaleFactor: 1,
+      });
+      const imageBuffer = fs.readFileSync(imagePath);
+      const imageBase64 = imageBuffer.toString("base64");
+      // Reemplaza "-" por "/", "+" por ".", "%0A" por "<br>"
+      const text1Convertido = cleanHTML(text1)
+        .replace(/-/g, "/")
+        .replace(/\+/g, ".")
+        .replace(/\n/g, "<br>");
+
+      const text2Convertido = cleanHTML(text2)
+        .replace(/-/g, "/")
+        .replace(/\+/g, ".")
+        .replace(/\n/g, "<br>");
+
+      const htmlContent = `
+          <html>
+            <head>
+              <style>
+              @import url(${cssConfig.fontFamilyUrl});
+              body {
+                margin: 0;
+                padding: 0;
               }
-              .text2 {
+              img {
                 position: absolute;
-                top: ${cssConfig.text2.top};
-                left: ${cssConfig.text2.left};
-                font-family: ${cssConfig.text2.fontFamily};
-                color: ${cssConfig.text2.textColor};
-                font-size: ${cssConfig.text2.fontSize};
-                font-weight: ${cssConfig.text2.fontWeight};
-                font-style: ${cssConfig.text2.fontStyle};
-                letter-spacing: ${cssConfig.text2.letterSpacing};
-                line-height: ${cssConfig.text2.lineHeight};
-                text-align: ${cssConfig.text2.textAlign};
-                text-shadow: ${cssConfig.text2.textShadow};
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
               }
-            </style>
-          </head>
-          <body>
-            <img src="data:image/jpeg;base64,${imageBase64}" alt="bg" />
-            <div class="text1">${text1Convertido}</div>
-            <div class="text2">${text2Convertido}</div>
-          </body>
-        </html>
-      `;
+              .text1 {
+                  position: absolute;
+                  top: ${cssConfig.text1.top};
+                  left: ${cssConfig.text1.left};
+                  font-family: ${cssConfig.text1.fontFamily};
+                  color: ${cssConfig.text1.textColor};
+                  font-size: ${cssConfig.text1.fontSize};
+                  font-weight: ${cssConfig.text1.fontWeight};
+                  font-style: ${cssConfig.text1.fontStyle};
+                  letter-spacing: ${cssConfig.text1.letterSpacing};
+                  line-height: ${cssConfig.text1.lineHeight};
+                  text-align: ${cssConfig.text1.textAlign};
+                  text-shadow: ${cssConfig.text1.textShadow};
+                }
+                .text2 {
+                  position: absolute;
+                  top: ${cssConfig.text2.top};
+                  left: ${cssConfig.text2.left};
+                  font-family: ${cssConfig.text2.fontFamily};
+                  color: ${cssConfig.text2.textColor};
+                  font-size: ${cssConfig.text2.fontSize};
+                  font-weight: ${cssConfig.text2.fontWeight};
+                  font-style: ${cssConfig.text2.fontStyle};
+                  letter-spacing: ${cssConfig.text2.letterSpacing};
+                  line-height: ${cssConfig.text2.lineHeight};
+                  text-align: ${cssConfig.text2.textAlign};
+                  text-shadow: ${cssConfig.text2.textShadow};
+                }
+              </style>
+            </head>
+            <body>
+              <img src="data:image/jpeg;base64,${imageBase64}" alt="bg" />
+              <div class="text1">${text1Convertido}</div>
+              <div class="text2">${text2Convertido}</div>
+            </body>
+          </html>
+        `;
 
-    await page.setContent(htmlContent, { waitUntil: "networkidle2" });
+      await page.setContent(htmlContent, { waitUntil: "networkidle2" });
 
-    // Captura una captura de pantalla de la página
-    const screenshot = await page.screenshot();
+      // Captura una captura de pantalla de la página
+      const screenshot = await page.screenshot();
 
-    await browser.close();
+      await browser.close();
 
-    return screenshot;
+      return screenshot;
+    } catch (err: any) {
+      console.log(err.message);
+      if (err.code === "ENOENT") {
+        throw new StatusError("Archivo no encontrado", 404);
+      } else if (err.message === "Imagen no encontrada") {
+        throw new StatusError(err.message, 404);
+      } else {
+        throw new StatusError("Error generando imagen", 400);
+      }
+    }
   }
 
   async generateImage(req: Request) {

@@ -43,7 +43,7 @@
             (change)="onImageSelected($event)"
             class="form-control"
           >
-            <option *ngFor="let image of images" [value]="image.path">
+            <option *ngFor="let image of images" [value]="image.id">
               {{ image.descripcion }}
             </option>
           </select>
