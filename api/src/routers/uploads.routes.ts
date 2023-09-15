@@ -1,6 +1,6 @@
 import { Router } from "express";
 import UploadController from "../controllers/upload.controller";
-import { uploadImage, uploadJSON } from "../middlewares/multer";
+import { uploadImage, uploadJSON, uploadTemplate } from "../middlewares/multer";
 import { verificarToken } from "../middlewares/auth";
 
 const uploadRouter = Router();
@@ -39,6 +39,24 @@ uploadRouter.delete(
   "/json/:id",
   verificarToken,
   UploadController.deleteJSONConfig
+);
+
+// [GET] 🌐/api/uploads/template
+uploadRouter.get("/template", verificarToken, UploadController.getTemplates);
+
+// [POST] 🌐/api/uploads/template
+uploadRouter.post(
+  "/template",
+  verificarToken,
+  uploadTemplate.single("template"),
+  UploadController.postTemplate
+);
+
+// [DELETE] 🌐/api/uploads/template/:id
+uploadRouter.delete(
+  "/template/:id",
+  verificarToken,
+  UploadController.deleteTemplate
 );
 
 export default uploadRouter;

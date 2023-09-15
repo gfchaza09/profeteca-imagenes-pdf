@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { catchError } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';
+import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { showErrorAlert } from 'src/app/shared/utils/swal';
 
 @Component({
@@ -13,6 +14,7 @@ import { showErrorAlert } from 'src/app/shared/utils/swal';
 export class LoginPageComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private validatorsService = inject(ValidatorsService);
   private router = inject(Router);
 
   public myForm: FormGroup = this.fb.group({
@@ -21,10 +23,7 @@ export class LoginPageComponent {
   });
 
   isValidField(field: string): boolean {
-    return (
-      !!this.myForm.controls[field].errors &&
-      this.myForm.controls[field].touched
-    );
+    return this.validatorsService.isValidField(this.myForm, field);
   }
 
   onSubmit() {

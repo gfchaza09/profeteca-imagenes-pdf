@@ -4,10 +4,22 @@ import { StatusError } from "../classes/StatusError";
 
 const storageImage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, config.STORAGE);
+    cb(null, `${config.STORAGE}/image`);
   },
   filename: (req, file, cb) => {
-    const fileName = `bg-${file.originalname
+    const fileName = `${file.originalname
+      .split(".")
+      .shift()}.${file.originalname.split(".").pop()}`;
+    cb(null, fileName);
+  },
+});
+
+const storageTemplate = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, `${config.STORAGE}/template`);
+  },
+  filename: (req, file, cb) => {
+    const fileName = `${file.originalname
       .split(".")
       .shift()}.${file.originalname.split(".").pop()}`;
     cb(null, fileName);
@@ -16,10 +28,10 @@ const storageImage = multer.diskStorage({
 
 const storageJSON = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, config.STORAGE);
+    cb(null, `${config.STORAGE}/json`);
   },
   filename: (req, file, cb) => {
-    const fileName = `config-${file.originalname
+    const fileName = `${file.originalname
       .split(".")
       .shift()}.${file.originalname.split(".").pop()}`;
     cb(null, fileName);
@@ -64,4 +76,21 @@ const uploadJSON = multer({
   },
 });
 
-export { uploadImage, uploadJSON };
+// Funcion para cargar templates a la carpeta definida en el archivo .env
+const uploadTemplate = multer({
+  storage: storageTemplate,
+  fileFilter: (req, file, callback) => {
+    if (file.originalname.endsWith(".ejs")) {
+      callback(null, true);
+    } else {
+      callback(
+        new StatusError(
+          "Tipo de archivo no válido. Solo se permiten archivos EJS.",
+          400
+        )
+      ); // Error de validación
+    }
+  },
+});
+
+export { uploadImage, uploadJSON, uploadTemplate };

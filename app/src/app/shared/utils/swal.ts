@@ -35,10 +35,67 @@ export const showSuccessAlert = async (message: string) => {
 
 export const showURLImage = async (url: string) => {
   return Swal.fire({
-    title: 'Imagen generada',
-    imageUrl: url,
+    showConfirmButton: false,
+    showCloseButton: true,
+    customClass: {
+      closeButton: 'custom-close-button',
+    },
     html: `<a href="${url}" target="_blank">Click aquí</a>`,
-    imageWidth: 400,
-    imageHeight: 400,
+    imageUrl: url,
+    imageWidth: 420,
+    imageHeight: 420,
   });
+};
+
+export const showURLPDF = async (url: string, preview?: boolean) => {
+  return Swal.fire({
+    title: 'PDF generado',
+    html: preview
+      ? `
+    <div id="pdf-container" style="width: 100%; height: 700px;"></div>
+    `
+      : `
+    <div id="pdf-container" style="width: 100%; height: 700px;"></div>
+    <a href="${url}" target="_blank">Click aquí</a>
+    `,
+    showConfirmButton: false,
+    showCloseButton: true,
+    customClass: {
+      closeButton: 'custom-close-button',
+    },
+    didOpen: () => {
+      Swal.showLoading();
+      const pdfContainer = document.getElementById('pdf-container');
+      const iframe = document.createElement('iframe');
+      iframe.src = url;
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.onload = () => {
+        Swal.hideLoading();
+      };
+      if (pdfContainer) pdfContainer.appendChild(iframe);
+    },
+  });
+};
+
+export const showPromptForInput = async (): Promise<string | null> => {
+  const { value: input } = await Swal.fire({
+    title: 'Ingrese un ID',
+    input: 'text',
+    inputPlaceholder: 'Ingrese un ID',
+    showCancelButton: true,
+    inputValidator: (value) => {
+      if (!value) {
+        return 'Debe ingresar un valor';
+      }
+      return;
+    },
+  });
+
+  if (input === undefined) {
+    // El usuario hizo clic en Cancelar
+    return null;
+  } else {
+    return input;
+  }
 };

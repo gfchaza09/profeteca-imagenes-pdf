@@ -31,7 +31,7 @@ app.use((req, res, next): void => {
 });
 
 app.get("/api", (req: Request, res: Response) => {
-  res.send("Bienvenido a la API de Trami-Imagenes!");
+  res.send("Bienvenido a la API de Trami-Imagenes/PDF!");
 });
 
 // Router Api

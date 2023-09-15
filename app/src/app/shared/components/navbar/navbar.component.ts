@@ -17,21 +17,39 @@ interface MenuItem {
 export class NavbarComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
-  public menuItems: MenuItem[] = [
+  public imageItems: MenuItem[] = [
     {
-      title: 'Home',
-      icon: 'fas fa-home',
-      route: '/dashboard/home',
+      title: 'Generar Imagen',
+      icon: 'fas fa-download',
+      route: '/dashboard/image/home',
     },
     {
       title: 'Carga Imagen',
       icon: 'fas fa-upload',
-      route: '/dashboard/upload',
+      route: '/dashboard/image/upload',
     },
     {
       title: 'Configuraciones',
       icon: 'fas fa-clipboard-check',
-      route: '/dashboard/config',
+      route: '/dashboard/image/config',
+    },
+  ];
+
+  public pdfItems: MenuItem[] = [
+    {
+      title: 'Generar PDF',
+      icon: 'fas fa-download',
+      route: '/dashboard/pdf/home',
+    },
+    {
+      title: 'Carga Templates',
+      icon: 'fas fa-upload',
+      route: '/dashboard/pdf/upload',
+    },
+    {
+      title: 'Lista Templates',
+      icon: 'fas fa-list',
+      route: '/dashboard/pdf/list',
     },
   ];
 

@@ -102,6 +102,54 @@ class UploadController {
       }
     }
   }
+
+  async getTemplates(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await UploadService.getTemplates();
+      res.status(200).json({ message: data });
+    } catch (err: StatusError | unknown) {
+      logError(err);
+      logWarning(`${req.method} ${req.originalUrl} ${res.statusCode}`);
+      if (err instanceof StatusError) {
+        next(err);
+      } else {
+        const statusError = new StatusError("Internal Server Error", 500);
+        next(statusError);
+      }
+    }
+  }
+
+  async postTemplate(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await UploadService.postTemplate(req);
+      res.status(200).json({ message: data });
+    } catch (err: StatusError | unknown) {
+      logError(err);
+      logWarning(`${req.method} ${req.originalUrl} ${res.statusCode}`);
+      if (err instanceof StatusError) {
+        next(err);
+      } else {
+        const statusError = new StatusError("Internal Server Error", 500);
+        next(statusError);
+      }
+    }
+  }
+
+  async deleteTemplate(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await UploadService.deleteTemplate(req);
+      res.status(200).json({ message: data });
+    } catch (err: StatusError | unknown) {
+      logError(err);
+      logWarning(`${req.method} ${req.originalUrl} ${res.statusCode}`);
+      if (err instanceof StatusError) {
+        next(err);
+      } else {
+        const statusError = new StatusError("Internal Server Error", 500);
+        next(statusError);
+      }
+    }
+  }
 }
 
 export default new UploadController();

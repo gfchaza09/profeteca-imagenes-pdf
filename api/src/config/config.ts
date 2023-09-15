@@ -21,6 +21,7 @@ const config: Config = {
     USER: process.env.AUTH_USER ?? "",
     PASSWORD: process.env.AUTH_PASSWORD ?? "",
   },
+  API_DATA_URL: process.env.API_DATA_URL ?? "",
 };
 
 export default config;

@@ -26,22 +26,6 @@ class ImagenController {
       }
     }
   }
-
-  async generateImage(req: Request, res: Response, next: NextFunction) {
-    try {
-      const data = await ImagenService.generateImage(req);
-      res.status(200).json({ message: data });
-    } catch (err: StatusError | unknown) {
-      logError(err);
-      logWarning(`${req.method} ${req.originalUrl} ${res.statusCode}`);
-      if (err instanceof StatusError) {
-        next(err);
-      } else {
-        const statusError = new StatusError("Internal Server Error", 500);
-        next(statusError);
-      }
-    }
-  }
 }
 
 export default new ImagenController();

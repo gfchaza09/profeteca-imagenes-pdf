@@ -2,9 +2,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { LayoutPageComponent } from './pages/layout-page/layout-page.component';
-import { HomePageComponent } from './pages/home-page/home-page.component';
-import { UploadPageComponent } from './pages/upload-page/upload-page.component';
-import { ConfigPageComponent } from './pages/config-page/config-page.component';
+import { HomeImagePageComponent } from './pages/image/home-image-page/home-image-page.component';
+import { UploadImagePageComponent } from './pages/image/upload-image-page/upload-image-page.component';
+import { ConfigImagePageComponent } from './pages/image/config-image-page/config-image-page.component';
+import { HomePdfPageComponent } from './pages/pdf/home-pdf-page/home-pdf-page.component';
+import { UploadPdfPageComponent } from './pages/pdf/upload-pdf-page/upload-pdf-page.component';
+import { ListPdfPageComponent } from './pages/pdf/list-pdf-page/list-pdf-page.component';
 
 const routes: Routes = [
   {
@@ -12,20 +15,32 @@ const routes: Routes = [
     component: LayoutPageComponent,
     children: [
       {
-        path: 'home',
-        component: HomePageComponent,
+        path: 'image/home',
+        component: HomeImagePageComponent,
       },
       {
-        path: 'upload',
-        component: UploadPageComponent,
+        path: 'image/upload',
+        component: UploadImagePageComponent,
       },
       {
-        path: 'config',
-        component: ConfigPageComponent,
+        path: 'image/config',
+        component: ConfigImagePageComponent,
+      },
+      {
+        path: 'pdf/home',
+        component: HomePdfPageComponent,
+      },
+      {
+        path: 'pdf/upload',
+        component: UploadPdfPageComponent,
+      },
+      {
+        path: 'pdf/list',
+        component: ListPdfPageComponent,
       },
       {
         path: '**',
-        redirectTo: 'home',
+        redirectTo: 'image/home',
       },
     ],
   },

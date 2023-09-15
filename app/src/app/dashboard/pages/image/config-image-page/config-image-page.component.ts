@@ -3,18 +3,21 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { showErrorAlert, showSuccessAlert } from 'src/app/shared/utils/swal';
-import { Image } from '../../interfaces/image.interface';
-import { ApiService } from '../../services/api.service';
-import { cleanHTML } from '../../utils/cleanerText';
+import { Image } from '../../../interfaces/image.interface';
+import { ApiService } from '../../../services/api.service';
+import { ValidatorsService } from 'src/app/shared/services/validators.service';
+import { cleanHTML } from '../../../utils/cleanerText';
 
 @Component({
-  templateUrl: './config-page.component.html',
+  templateUrl: './config-image-page.component.html',
   styles: [],
 })
-export class ConfigPageComponent implements OnInit {
+export class ConfigImagePageComponent implements OnInit {
   private fb = inject(FormBuilder);
   private sanitizer = inject(DomSanitizer);
   private apiService = inject(ApiService);
+  private validatorsService = inject(ValidatorsService);
+
   myForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
     text1: ['Texto1%0Ade prueba'],
@@ -68,6 +71,10 @@ export class ConfigPageComponent implements OnInit {
   get formValue() {
     const { text1, text2, ...formValue } = this.myForm.value;
     return formValue;
+  }
+
+  isValidField(field: string): boolean {
+    return this.validatorsService.isValidField(this.myForm, field);
   }
 
   onImageSelected(event: any) {
@@ -183,7 +190,11 @@ export class ConfigPageComponent implements OnInit {
         showErrorAlert(res);
       } else {
         showSuccessAlert(typeof res === 'string' ? res : 'Acción completada');
-        this.myForm.reset();
+        this.myForm.reset({
+          text1: 'Texto1%0Ade prueba',
+          text2: 'Texto2 de prueba',
+        });
+        this.selectedImage = null;
       }
     });
   }

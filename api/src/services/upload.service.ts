@@ -1,8 +1,10 @@
 import fs from "fs";
 import { Request } from "express";
+
 import { StatusError } from "../classes/StatusError";
 import imagenModel from "../models/imagen.model";
 import tipoModel from "../models/tipo.model";
+import templateModel from "../models/template.model";
 
 class UploadService {
   constructor() {}
@@ -85,6 +87,45 @@ class UploadService {
     await config.save();
 
     return "Configuración borrada con éxito";
+  }
+
+  async getTemplates() {
+    const templates = await templateModel.find(
+      { isDeleted: false },
+      { nombre: 1, _id: 1 }
+    );
+
+    return templates;
+  }
+
+  async postTemplate(req: Request) {
+    const { nombre } = req.body;
+
+    if (!nombre) throw new StatusError("Nombre requerido", 400);
+
+    if (!req.file) throw new StatusError("Falló subida de archivo", 400);
+
+    const templatePath = req.file.path;
+
+    const newTemplate = new templateModel({ path: templatePath, nombre });
+
+    await newTemplate.save();
+
+    return "Template subido correctamente";
+  }
+
+  async deleteTemplate(req: Request) {
+    const { id } = req.params;
+
+    const template = await templateModel.findById(id);
+
+    if (!template) throw new StatusError("Template no encontrado", 404);
+
+    template.isDeleted = true;
+
+    await template.save();
+
+    return "Template borrado con éxito";
   }
 }
 

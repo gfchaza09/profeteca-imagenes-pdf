@@ -1,0 +1,13 @@
+.custom-close-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10px;
+  cursor: pointer;
+  color: #aaa;
+  font-size: 18px;
+}
+
+#pdf-container {
+  overflow-y: auto;
+}

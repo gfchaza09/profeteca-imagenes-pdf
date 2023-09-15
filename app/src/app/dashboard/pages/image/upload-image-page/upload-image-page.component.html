@@ -10,9 +10,20 @@
         formControlName="foto"
         (change)="onFileSelected($event)"
       />
-
-      <span *ngIf="isValidField('foto')" class="form-text text-danger">
-        Campo requerido
+      <span
+        *ngIf="
+          myForm.get('foto')?.touched &&
+          myForm.get('foto')?.hasError('required')
+        "
+        class="form-text text-danger"
+      >
+        {{ customErrorMessages.required }}
+      </span>
+      <span
+        *ngIf="myForm.get('foto')?.hasError('invalidMimeType')"
+        class="form-text text-danger"
+      >
+        {{ customErrorMessages.invalidMimeType }}
       </span>
     </div>
     <div class="form-group mb-2">

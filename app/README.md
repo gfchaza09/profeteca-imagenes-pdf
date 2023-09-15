@@ -1,4 +1,4 @@
-# trami-imagenes APP
+# trami-imagenes-pdf APP
 
 # Índice
 
@@ -63,6 +63,31 @@ Estas son las funcionalidades adicionales que se han agregado a la documentació
 - Los signos "+" se reemplazarán por puntos ".".
 - Los caracteres "%0A" se reemplazarán por saltos de línea.
 
+### Generador de PDF
+El generador de PDF permite a los usuarios convertir templates en la aplicación en documentos PDF descargables. Las características clave incluyen:
+
+- Generar PDF: Los usuarios pueden seleccionar templates en la aplicación, un ID para obtener datos y convertirlos en documentos PDF.
+
+- Vista Previa de PDF: Se proporciona una vista previa del PDF generado para que los usuarios puedan verificar su diseño antes de dirigirse al enlace.
+
+- Enlace de PDF: Los usuarios pueden abrir el enlace del PDF generado.
+
+### Subida de Template
+La funcionalidad de subida de templates permite a los usuarios cargar archivos de plantillas que se utilizarán como base para la generación de contenido personalizado. Las características clave incluyen:
+
+- Subir Templates: Los usuarios pueden cargar archivos de plantillas en formato EJS para su uso en la generación de contenido. El mismo se cargará en un area de texto.
+
+- Vista Previa de Template: Se proporciona una vista previa del Template y se le permite al usuario cargar variables del EJS para que pueda visualizarlas.
+
+- Personalización de Plantillas: Las plantillas cargadas se pueden personalizar con datos y contenido específicos antes de la generación.
+
+### Administración de Templates
+La administración de templates permite a los usuarios gestionar sus templates para una generación de contenido más eficiente. Las características clave incluyen:
+
+- Ver Templates: Los usuarios pueden ver todas sus templates cargados, diponen de una vista previa del mismo. El usuario debe ingresar un ID para obtener información y así generar la vista previa del PDF.
+
+- Eliminar Templates: Los usuarios pueden eliminar templates que ya no necesiten, los cuales quedarán eliminados en la base de datos. Por lo tanto ya no generarán archivos PDF.
+
 <a name="rutas"></a>
 
 ## 3. Rutas de la aplicación
@@ -72,26 +97,38 @@ A continuación se describen las rutas disponibles en la aplicación:
 - **Iniciar Sesión**: `/auth/login`
   - Descripción: Página de inicio de sesión para acceder a la aplicación.
   
-- **Generador de imágenes/Administrador de configuraciones**: `/dashboard/home`
+- **Generador de imágenes/Administrador de configuraciones**: `/dashboard/image/home`
   - Descripción: Página principal que actúa como generador de imágenes. También permite eliminar configuraciones.
   - Requisitos: Requiere autenticación.
 
-- **Subida de imagen/Administrador de imágenes**: `/dashboard/upload`
+- **Subida de imagen/Administrador de imágenes**: `/dashboard/image/upload`
   - Descripción: Página que permite a los usuarios cargar imágenes y agregar descripciones. También permite eliminar imágenes.
   - Requisitos: Requiere autenticación.
 
-- **Subida de configuración**: `/dashboard/config`
+- **Subida de configuración**: `/dashboard/image/config`
   - Descripción: Página donde se generarán los archivos JSON con la configuración CSS de los textos que se utilizarán para la creación de la imagen. Se dispondrá de una vista previa de la imagen y su configuración CSS, como así también se verán los datos del archivo JSON.
   - Requisitos: Requiere autenticación.
 
+- **Generador de PDF**: `/dashboard/pdf/home`
+  - Descripción: Página principal que actúa como generador de PDF.
+  - Requisitos: Requiere autenticación.
+
+- **Subida de temnplate**: `/dashboard/pdf/upload`
+  - Descripción: Página que permite a los usuarios cargar templates y agregarle un nombre como referencia. La pantalla dispone de una vista previa del template en HTML y permite cargar variables en usando campos de nombre y valor para las mismas.
+  - Requisitos: Requiere autenticación.
+
+- **Lista de templates**: `/dashboard/pdf/list`
+  - Descripción: Página donde se administrarán los templates cargados. Se puede obtener una vista previa del mismo y se dispone de un botón para eliminar un template.
+  - Requisitos: Requiere autenticación.
+
 - **Ruta por Defecto**: `/**`
-  - Descripción: Ruta por defecto en caso de que ninguna coincida, redirige a la Página principal.
+  - Descripción: Ruta por defecto en caso de que ninguna coincida, redirige a la página principal de Imágenes.
 
 <a name="tecnologias"></a>
 
 ## 4. Tecnologías utilizadas
 
-Las tecnologías utilizadas en el front-end de Trami-Imagenes son las siguientes:
+Las tecnologías utilizadas en el front-end de Trami-Imagenes-PDF son las siguientes:
 
 - **Angular**: Angular es un framework de desarrollo de aplicaciones web de código abierto basado en TypeScript. Proporciona una estructura robusta para construir aplicaciones web modernas y dinámicas.
 - **Bootstrap**: Bootstrap es un framework de diseño CSS ampliamente utilizado que ofrece una amplia variedad de componentes y estilos predefinidos. Facilita la creación de interfaces de usuario atractivas y responsivas.

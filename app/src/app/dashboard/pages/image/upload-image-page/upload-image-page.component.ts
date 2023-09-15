@@ -2,17 +2,18 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { showErrorAlert, showSuccessAlert } from 'src/app/shared/utils/swal';
-import { ApiService } from '../../services/api.service';
-import { catchError } from 'rxjs';
-import { Image } from '../../interfaces/image.interface';
+import { ApiService } from '../../../services/api.service';
+import { ValidatorsService } from 'src/app/shared/services/validators.service';
+import { Image } from '../../../interfaces/image.interface';
 
 @Component({
-  templateUrl: './upload-page.component.html',
+  templateUrl: './upload-image-page.component.html',
   styles: [],
 })
-export class UploadPageComponent implements OnInit {
+export class UploadImagePageComponent implements OnInit {
   private fb = inject(FormBuilder);
   private apiService = inject(ApiService);
+  private validatorsService = inject(ValidatorsService);
   public selectedImage?: File;
   public myForm: FormGroup = this.fb.group({
     foto: ['', Validators.required],
@@ -21,6 +22,11 @@ export class UploadPageComponent implements OnInit {
 
   public loading: boolean = false;
   public images: Image[] | null = [];
+
+  public customErrorMessages = {
+    required: 'Campo requerido',
+    invalidMimeType: 'El formato de imagen no es válido',
+  };
 
   ngOnInit(): void {
     this.getImagesList();
@@ -35,16 +41,23 @@ export class UploadPageComponent implements OnInit {
   }
 
   isValidField(field: string): boolean {
-    return (
-      !!this.myForm.controls[field].errors &&
-      this.myForm.controls[field].touched
-    );
+    return this.validatorsService.isValidField(this.myForm, field);
+  }
+
+  isValidMimeType(mimeType: string): boolean {
+    // Lista de tipos MIME permitidos
+    const allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+    return allowedMimes.includes(mimeType);
   }
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
-      this.selectedImage = file;
+      if (this.isValidMimeType(file.type)) {
+        this.selectedImage = file;
+      } else {
+        this.myForm.controls['foto'].setErrors({ invalidMimeType: true });
+      }
     }
   }
 

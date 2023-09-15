@@ -1,33 +1,82 @@
-<nav class="navbar bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" routerLink="/dashboard">
       <img
         class="img-thumbnail"
         src="assets/tramicode.png"
         alt="logo"
-        width="300"
+        width="280"
       />
     </a>
-    <ul class="navbar-nav flex-row gap-5">
-      <li *ngFor="let menuItem of menuItems" class="nav-item">
-        <a
-          class="nav-link"
-          routerLinkActive="active"
-          aria-current="page"
-          [routerLink]="menuItem.route"
-        >
-          <i [class]="menuItem.icon"></i> {{ menuItem.title }}</a
-        >
-      </li>
-    </ul>
-    <div class="d-flex gap-2 align-items-center me-4">
-      <img
-        class="img-thumbnail"
-        src="assets/img-perfil.png"
-        alt="avatar"
-        width="45"
-      />
-      <button class="btn btn-outline-danger" (click)="logout()">Logout</button>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-lg-5 me-auto mb-2 mb-lg-0 gap-lg-5">
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fas fa-image"></i> Imagenes
+          </a>
+          <ul class="dropdown-menu">
+            <li *ngFor="let menuItem of imageItems">
+              <a
+                class="dropdown-item"
+                routerLinkActive="active"
+                aria-current="page"
+                [routerLink]="menuItem.route"
+              >
+                <i [class]="menuItem.icon"></i> {{ menuItem.title }}</a
+              >
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fas fa-file-pdf"></i> PDF
+          </a>
+          <ul class="dropdown-menu">
+            <li *ngFor="let menuItem of pdfItems">
+              <a
+                class="dropdown-item"
+                routerLinkActive="active"
+                aria-current="page"
+                [routerLink]="menuItem.route"
+              >
+                <i [class]="menuItem.icon"></i> {{ menuItem.title }}</a
+              >
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <div class="d-flex gap-2 align-items-center justify-content-between me-4">
+        <img
+          class="img-thumbnail"
+          src="assets/img-perfil.png"
+          alt="avatar"
+          width="45"
+        />
+        <button class="btn btn-outline-danger" (click)="logout()">
+          Logout
+        </button>
+      </div>
     </div>
   </div>
 </nav>

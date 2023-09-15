@@ -7,8 +7,9 @@ import {
 } from '@angular/forms';
 import { showURLImage } from 'src/app/shared/utils/swal';
 import { environment } from 'src/environments/environments';
-import { Config } from '../../interfaces/config.interface';
-import { ApiService } from '../../services/api.service';
+import { Config } from '../../../interfaces/config.interface';
+import { ApiService } from '../../../services/api.service';
+import { ValidatorsService } from 'src/app/shared/services/validators.service';
 
 const noHtmlOrSlashValidator = (control: FormControl) => {
   const value = control.value as string;
@@ -22,13 +23,14 @@ const noHtmlOrSlashValidator = (control: FormControl) => {
 };
 
 @Component({
-  templateUrl: './home-page.component.html',
+  templateUrl: './home-image-page.component.html',
   styles: [],
 })
-export class HomePageComponent implements OnInit {
+export class HomeImagePageComponent implements OnInit {
   private apiUrl = environment.apiUrl;
   private fb = inject(FormBuilder);
   private apiService = inject(ApiService);
+  private validatorsService = inject(ValidatorsService);
   public myForm: FormGroup = this.fb.group({
     config: ['', Validators.required],
     text1: ['', [Validators.required, noHtmlOrSlashValidator]],
@@ -39,7 +41,7 @@ export class HomePageComponent implements OnInit {
   public loading: boolean = false;
 
   public customErrorMessages = {
-    required: 'Este campo es requerido.',
+    required: 'Campo requerido',
     invalidInput: 'El campo contiene caracteres inválidos.',
   };
 
@@ -56,10 +58,7 @@ export class HomePageComponent implements OnInit {
   }
 
   isValidField(field: string): boolean {
-    return (
-      !!this.myForm.controls[field].errors &&
-      this.myForm.controls[field].touched
-    );
+    return this.validatorsService.isValidField(this.myForm, field);
   }
 
   generateImage() {

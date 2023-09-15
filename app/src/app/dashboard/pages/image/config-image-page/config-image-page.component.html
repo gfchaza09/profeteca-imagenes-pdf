@@ -12,6 +12,9 @@
             formControlName="name"
             class="form-control"
           />
+          <span *ngIf="isValidField('name')" class="form-text text-danger">
+            Campo requerido
+          </span>
         </div>
 
         <div class="form-group row mb-2">
@@ -47,6 +50,12 @@
               {{ image.descripcion }}
             </option>
           </select>
+          <span
+            *ngIf="isValidField('backgroundImage')"
+            class="form-text text-danger"
+          >
+            Campo requerido
+          </span>
         </div>
 
         <div formGroupName="css">
@@ -300,7 +309,7 @@
     </div>
     <!-- Columna para mostrar el JSON generado -->
     <div class="col-md-6">
-      <div class="card mb-5 p-2" style="width: 80%; height: 50vh">
+      <div class="card mb-5 p-2" style="width: 100%; height: 50vh">
         <h5 class="card-title">Vista previa:</h5>
         <div
           *ngIf="!selectedImage; else selectedImageSection"

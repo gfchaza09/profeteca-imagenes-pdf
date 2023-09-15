@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environments';
 import { BehaviorSubject, Observable, catchError, map, of, filter } from 'rxjs';
 import { GetImages, Image } from '../interfaces/image.interface';
 import { Config, GetConfigs } from '../interfaces/config.interface';
+import { GetTemplates, Template } from '../interfaces/template.interface';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -14,6 +15,8 @@ export class ApiService {
 
   private imagesSubject = new BehaviorSubject<Image[] | null>(null);
   private configsSubject = new BehaviorSubject<Config[] | null>(null);
+
+  private templatesSubject = new BehaviorSubject<Template[] | null>(null);
 
   getImages(): Observable<Image[] | null> {
     this.loadImages();
@@ -78,6 +81,42 @@ export class ApiService {
     return this.http
       .delete<{ message: string }>(
         `${this.baseUrl}/api/uploads/json/${configId}`
+      )
+      .pipe(
+        map((res) => res.message),
+        catchError((error) => of(error))
+      );
+  }
+
+  getTemplates(): Observable<Template[] | null> {
+    this.loadTemplates();
+    return this.templatesSubject
+      .asObservable()
+      .pipe(filter((templates) => templates !== null));
+  }
+
+  uploadTemplate(form: FormData): Observable<string> {
+    return this.http
+      .post<{ message: string }>(`${this.baseUrl}/api/uploads/template`, form)
+      .pipe(
+        map((res) => res.message),
+        catchError((error) => of(error))
+      );
+  }
+
+  loadTemplates(): void {
+    this.http
+      .get<GetTemplates>(`${this.baseUrl}/api/uploads/template`)
+      .pipe(map((res) => res.message))
+      .subscribe((templates) => {
+        this.templatesSubject.next(templates);
+      });
+  }
+
+  deleteTemplate(templateId: string): Observable<string> {
+    return this.http
+      .delete<{ message: string }>(
+        `${this.baseUrl}/api/uploads/template/${templateId}`
       )
       .pipe(
         map((res) => res.message),
