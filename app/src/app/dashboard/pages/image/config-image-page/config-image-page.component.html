@@ -13,7 +13,7 @@
             class="form-control"
           />
           <span *ngIf="isValidField('name')" class="form-text text-danger">
-            Campo requerido
+            {{ getFieldError("name") }}
           </span>
         </div>
 
@@ -54,7 +54,7 @@
             *ngIf="isValidField('backgroundImage')"
             class="form-text text-danger"
           >
-            Campo requerido
+            {{ getFieldError("backgroundImage") }}
           </span>
         </div>
 

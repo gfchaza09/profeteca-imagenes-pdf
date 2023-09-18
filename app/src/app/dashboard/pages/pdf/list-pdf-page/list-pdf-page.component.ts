@@ -1,4 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+
 import { Template } from '../../../interfaces/template.interface';
 import { ApiService } from '../../../services/api.service';
 import {
@@ -23,6 +25,7 @@ import { environment } from 'src/environments/environments';
 export class ListPdfPageComponent implements OnInit {
   private apiUrl: string = environment.apiUrl;
   private apiService = inject(ApiService);
+  private titleService = inject(Title);
 
   public templates: Template[] | null = [];
   public loading: boolean = false;
@@ -31,6 +34,8 @@ export class ListPdfPageComponent implements OnInit {
   public limit: number = 20;
 
   ngOnInit(): void {
+    this.titleService.setTitle('Lista Templates - Trami-Imagenes/PDF');
+
     this.getTemplatesList();
   }
 

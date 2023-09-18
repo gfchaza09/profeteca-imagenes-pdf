@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ApiService } from '../../../services/api.service';
@@ -14,6 +15,8 @@ export class UploadPdfPageComponent implements OnInit {
   private fb = inject(FormBuilder);
   private apiService = inject(ApiService);
   private validatorsService = inject(ValidatorsService);
+  private titleService = inject(Title);
+
   public myForm: FormGroup = this.fb.group({
     nombre: ['', [Validators.required]],
     template: ['', Validators.required],
@@ -23,6 +26,8 @@ export class UploadPdfPageComponent implements OnInit {
   public variableForm: FormGroup = this.fb.group({});
 
   ngOnInit(): void {
+    this.titleService.setTitle('Cargar Template - Trami-Imagenes/PDF');
+
     this.addVariable();
   }
 
@@ -79,6 +84,10 @@ export class UploadPdfPageComponent implements OnInit {
 
   isValidField(field: string): boolean {
     return this.validatorsService.isValidField(this.myForm, field);
+  }
+
+  getFieldError(field: string): string | null {
+    return this.validatorsService.getFieldError(this.myForm, field);
   }
 
   uploadTemplate() {

@@ -13,7 +13,7 @@
         </option>
       </select>
       <span *ngIf="isValidField('template')" class="form-text text-danger">
-        Campo requerido
+        {{ getFieldError("template") }}
       </span>
     </div>
     <div class="form-group mb-3">
@@ -26,7 +26,7 @@
         placeholder="Ingrese el ID"
       />
       <span *ngIf="isValidField('id')" class="form-text text-danger">
-        Campo requerido
+        {{ getFieldError("id") }}
       </span>
     </div>
 

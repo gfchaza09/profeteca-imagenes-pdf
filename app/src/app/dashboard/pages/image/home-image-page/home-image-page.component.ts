@@ -1,10 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
+
 import { showURLImage } from 'src/app/shared/utils/swal';
 import { environment } from 'src/environments/environments';
 import { Config } from '../../../interfaces/config.interface';
@@ -31,6 +33,8 @@ export class HomeImagePageComponent implements OnInit {
   private fb = inject(FormBuilder);
   private apiService = inject(ApiService);
   private validatorsService = inject(ValidatorsService);
+  private titleService = inject(Title);
+
   public myForm: FormGroup = this.fb.group({
     config: ['', Validators.required],
     text1: ['', [Validators.required, noHtmlOrSlashValidator]],
@@ -40,12 +44,8 @@ export class HomeImagePageComponent implements OnInit {
   public availableConfigs: Config[] | null = [];
   public loading: boolean = false;
 
-  public customErrorMessages = {
-    required: 'Campo requerido',
-    invalidInput: 'El campo contiene caracteres inválidos.',
-  };
-
   ngOnInit(): void {
+    this.titleService.setTitle('Generar Imagen - Trami-Imagenes/PDF');
     this.getConfigsList();
   }
 
@@ -59,6 +59,10 @@ export class HomeImagePageComponent implements OnInit {
 
   isValidField(field: string): boolean {
     return this.validatorsService.isValidField(this.myForm, field);
+  }
+
+  getFieldError(field: string): string | null {
+    return this.validatorsService.getFieldError(this.myForm, field);
   }
 
   generateImage() {

@@ -130,7 +130,7 @@ Para la mayoría de peticiones a la API, es esencial incluir un `Bearer Token` e
 - Es necesario que el solicitante sea un administrador para poder realizar esta acción.
 
 **Cuerpo de la petición (Request Body)**:
-- `foto`: Archivo de imagen en formato jpeg o png.
+- `foto`: Archivo de imagen en formato jpeg o png. Tamaño máximo permitido: 5 MB.
 - `descripcion`:  Descripción para la imagen que servirá de referencia.
 
 **Respuesta**:

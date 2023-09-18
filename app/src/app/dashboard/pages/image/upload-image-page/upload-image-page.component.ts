@@ -5,6 +5,7 @@ import { showErrorAlert, showSuccessAlert } from 'src/app/shared/utils/swal';
 import { ApiService } from '../../../services/api.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { Image } from '../../../interfaces/image.interface';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   templateUrl: './upload-image-page.component.html',
@@ -14,6 +15,8 @@ export class UploadImagePageComponent implements OnInit {
   private fb = inject(FormBuilder);
   private apiService = inject(ApiService);
   private validatorsService = inject(ValidatorsService);
+  private titleService = inject(Title);
+
   public selectedImage?: File;
   public myForm: FormGroup = this.fb.group({
     foto: ['', Validators.required],
@@ -23,12 +26,8 @@ export class UploadImagePageComponent implements OnInit {
   public loading: boolean = false;
   public images: Image[] | null = [];
 
-  public customErrorMessages = {
-    required: 'Campo requerido',
-    invalidMimeType: 'El formato de imagen no es válido',
-  };
-
   ngOnInit(): void {
+    this.titleService.setTitle('Imagenes - Trami-Imagenes/PDF');
     this.getImagesList();
   }
 
@@ -44,20 +43,24 @@ export class UploadImagePageComponent implements OnInit {
     return this.validatorsService.isValidField(this.myForm, field);
   }
 
-  isValidMimeType(mimeType: string): boolean {
-    // Lista de tipos MIME permitidos
-    const allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
-    return allowedMimes.includes(mimeType);
+  getFieldError(field: string): string | null {
+    return this.validatorsService.getFieldError(this.myForm, field);
   }
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
+    const maxFileSize = 5 * 1024 * 1024; // 5 MB en bytes
+
     if (file) {
-      if (this.isValidMimeType(file.type)) {
+      if (this.validatorsService.isValidMimeType(file.type)) {
         this.selectedImage = file;
       } else {
         this.myForm.controls['foto'].setErrors({ invalidMimeType: true });
+        return;
       }
+    }
+    if (file && file.size > maxFileSize) {
+      this.myForm.controls['foto'].setErrors({ invalidFileSize: true });
     }
   }
 

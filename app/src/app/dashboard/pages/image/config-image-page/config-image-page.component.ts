@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, Title } from '@angular/platform-browser';
 
 import { showErrorAlert, showSuccessAlert } from 'src/app/shared/utils/swal';
 import { Image } from '../../../interfaces/image.interface';
@@ -17,6 +17,7 @@ export class ConfigImagePageComponent implements OnInit {
   private sanitizer = inject(DomSanitizer);
   private apiService = inject(ApiService);
   private validatorsService = inject(ValidatorsService);
+  private titleService = inject(Title);
 
   myForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
@@ -59,6 +60,7 @@ export class ConfigImagePageComponent implements OnInit {
   public previewHTML: any = '';
 
   ngOnInit(): void {
+    this.titleService.setTitle('Configuraciones - Trami-Imagenes/PDF');
     this.apiService.getImages().subscribe((images) => {
       this.images = images;
     });
@@ -75,6 +77,10 @@ export class ConfigImagePageComponent implements OnInit {
 
   isValidField(field: string): boolean {
     return this.validatorsService.isValidField(this.myForm, field);
+  }
+
+  getFieldError(field: string): string | null {
+    return this.validatorsService.getFieldError(this.myForm, field);
   }
 
   onImageSelected(event: any) {

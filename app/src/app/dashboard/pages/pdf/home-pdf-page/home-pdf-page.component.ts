@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 
 import { environment } from 'src/environments/environments';
 import { ApiService } from '../../../services/api.service';
@@ -16,6 +17,8 @@ export class HomePdfPageComponent implements OnInit {
   private fb = inject(FormBuilder);
   private apiService = inject(ApiService);
   private validatorsService = inject(ValidatorsService);
+  private titleService = inject(Title);
+
   public myForm: FormGroup = this.fb.group({
     template: ['', Validators.required],
     id: ['', [Validators.required]],
@@ -25,6 +28,7 @@ export class HomePdfPageComponent implements OnInit {
   public loading: boolean = false;
 
   ngOnInit(): void {
+    this.titleService.setTitle('Generar PDF - Trami-Imagenes/PDF');
     this.getTemplatesList();
   }
 
@@ -38,6 +42,10 @@ export class HomePdfPageComponent implements OnInit {
 
   isValidField(field: string): boolean {
     return this.validatorsService.isValidField(this.myForm, field);
+  }
+
+  getFieldError(field: string): string | null {
+    return this.validatorsService.getFieldError(this.myForm, field);
   }
 
   generatePDF() {

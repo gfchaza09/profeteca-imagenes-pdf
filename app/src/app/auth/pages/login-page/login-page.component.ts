@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { catchError } from 'rxjs';
@@ -16,14 +17,23 @@ export class LoginPageComponent {
   private authService = inject(AuthService);
   private validatorsService = inject(ValidatorsService);
   private router = inject(Router);
+  private titleService = inject(Title);
 
   public myForm: FormGroup = this.fb.group({
     username: ['', Validators.required],
     password: ['', Validators.required],
   });
 
+  constructor() {
+    this.titleService.setTitle('Login - Trami-Imagenes/PDF');
+  }
+
   isValidField(field: string): boolean {
     return this.validatorsService.isValidField(this.myForm, field);
+  }
+
+  getFieldError(field: string): string | null {
+    return this.validatorsService.getFieldError(this.myForm, field);
   }
 
   onSubmit() {

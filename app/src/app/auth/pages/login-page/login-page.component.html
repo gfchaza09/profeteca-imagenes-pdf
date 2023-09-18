@@ -21,7 +21,7 @@
                 *ngIf="isValidField('username')"
                 class="form-text text-danger"
               >
-                Campo requerido
+                {{ getFieldError("username") }}
               </span>
             </div>
             <div class="mb-3">
@@ -37,7 +37,7 @@
                 *ngIf="isValidField('password')"
                 class="form-text text-danger"
               >
-                Campo requerido
+                {{ getFieldError("password") }}
               </span>
             </div>
             <button type="submit" class="btn btn-primary">
