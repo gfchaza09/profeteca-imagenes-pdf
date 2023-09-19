@@ -49,7 +49,6 @@ export class UploadImagePageComponent implements OnInit {
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
-    const maxFileSize = 5 * 1024 * 1024; // 5 MB en bytes
 
     if (file) {
       if (this.validatorsService.isValidMimeType(file.type)) {
@@ -58,9 +57,6 @@ export class UploadImagePageComponent implements OnInit {
         this.myForm.controls['foto'].setErrors({ invalidMimeType: true });
         return;
       }
-    }
-    if (file && file.size > maxFileSize) {
-      this.myForm.controls['foto'].setErrors({ invalidFileSize: true });
     }
   }
 

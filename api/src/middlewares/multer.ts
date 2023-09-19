@@ -40,9 +40,6 @@ const storageJSON = multer.diskStorage({
 
 // Funcion para cargar cualquier imagen a la carpeta definida en el archivo .env
 const uploadImage = multer({
-  limits: {
-    fileSize: 5 * 1024 * 1024, // Límite de tamaño de 5 MB
-  },
   storage: storageImage,
   fileFilter: (req, file, callback) => {
     const allowedMimes = ["image/jpeg", "image/png", "image/gif"]; // Tipos MIME permitidos

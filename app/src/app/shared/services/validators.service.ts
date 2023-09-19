@@ -20,7 +20,7 @@ export class ValidatorsService {
         case 'invalidMimeType':
           return 'El formato de imagen no es válido.';
         case 'invalidFileSize':
-          return 'Tamaño de archivo demasiado grande. El máximo permitido es 5 MB.';
+          return 'Tamaño de archivo demasiado grande.';
       }
     }
 
