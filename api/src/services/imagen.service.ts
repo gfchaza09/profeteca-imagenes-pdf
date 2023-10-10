@@ -26,7 +26,7 @@ class ImagenService {
 
     try {
       // Leer el archivo JSON asociado con el "tipo"
-      const jsonPath = path.join(__dirname, `../../${configuracion.path}`);
+      const jsonPath = `${configuracion.path}`;
       const configJSON = JSON.parse(fs.readFileSync(jsonPath, "utf-8"));
 
       // Extraer la configuración de CSS y la imagen de fondo del JSON
@@ -41,7 +41,7 @@ class ImagenService {
       if (!imagen || imagen.isDeleted === true)
         throw new StatusError("Imagen no encontrada", 404);
 
-      const imagePath = path.join(__dirname, `../../${imagen.path}`);
+      const imagePath = `${imagen.path}`;
       const dimensions = sizeOf(imagePath);
 
       const { width: originalWidth, height: originalHeight } = dimensions;

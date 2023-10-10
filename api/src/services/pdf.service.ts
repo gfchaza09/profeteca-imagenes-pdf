@@ -23,7 +23,7 @@ class PDFService {
     if (!template || template.isDeleted === true)
       throw new StatusError("Template no encontrado", 404);
 
-    const templatePath = "./" + template.path;
+    const templatePath = template.path;
 
     const res = await axios.get(`${config.API_DATA_URL}/${tipo}/${id}`);
 
