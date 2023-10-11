@@ -1,7 +1,6 @@
-import path from "path";
 import fs from "fs";
 import sizeOf from "image-size";
-import puppeteer from "puppeteer";
+import { Browser } from "puppeteer";
 import { Request } from "express";
 import { isValidObjectId } from "mongoose";
 
@@ -9,9 +8,15 @@ import { StatusError } from "../classes/StatusError";
 import { cleanHTML } from "../utils/cleanerText";
 import tipoModel from "../models/tipo.model";
 import imagenModel from "../models/imagen.model";
+import { imageCache } from "../utils/cache";
+import PuppeteerManager from "../classes/PuppeteerManager";
 
 class ImagenService {
-  constructor() {}
+  browser: Browser | null;
+
+  constructor() {
+    this.browser = PuppeteerManager.browser;
+  }
 
   async getImage(req: Request) {
     const { text1, text2, tipo } = req.params;
@@ -23,6 +28,13 @@ class ImagenService {
 
     if (!configuracion || configuracion.isDeleted === true)
       throw new StatusError("Configuración no encontrada", 404);
+
+    const cacheKey = `${text1}-${text2}-${tipo}`;
+
+    // Verifica si la imagen ya existe en caché
+    if (imageCache[cacheKey]) {
+      return imageCache[cacheKey];
+    }
 
     try {
       // Leer el archivo JSON asociado con el "tipo"
@@ -46,12 +58,12 @@ class ImagenService {
 
       const { width: originalWidth, height: originalHeight } = dimensions;
 
-      const browser = await puppeteer.launch({
-        headless: "new",
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      });
+      if (!this.browser) {
+        await PuppeteerManager.init();
+        this.browser = PuppeteerManager.browser;
+      }
 
-      const page = await browser.newPage();
+      const page = await this.browser!.newPage();
 
       // Configurar el tamaño de la página para que se adapte a las dimensiones de la imagen
       await page.setViewport({
@@ -75,8 +87,10 @@ class ImagenService {
       const htmlContent = `
           <html>
             <head>
+              <link rel="preconnect" href="https://fonts.googleapis.com">
+              <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+              <link href="${cssConfig.fontFamilyUrl}" rel="stylesheet">
               <style>
-              @import url(${cssConfig.fontFamilyUrl});
               body {
                 margin: 0;
                 padding: 0;
@@ -126,12 +140,12 @@ class ImagenService {
           </html>
         `;
 
-      await page.setContent(htmlContent, { waitUntil: "networkidle2" });
+      await page.setContent(htmlContent);
 
       // Captura una captura de pantalla de la página
       const screenshot = await page.screenshot();
 
-      await browser.close();
+      imageCache[cacheKey] = screenshot;
 
       return screenshot;
     } catch (err: any) {

@@ -1,16 +1,22 @@
 import { Request } from "express";
 import { isValidObjectId } from "mongoose";
 import axios from "axios";
-import puppeteer from "puppeteer";
+import puppeteer, { Browser } from "puppeteer";
 import fs from "fs/promises";
 import ejs from "ejs";
 
 import { StatusError } from "../classes/StatusError";
 import templateModel from "../models/template.model";
 import config from "../config/config";
+import { pdfCache } from "../utils/cache";
+import PuppeteerManager from "../classes/PuppeteerManager";
 
 class PDFService {
-  constructor() {}
+  browser: Browser | null; // Declaración de la propiedad browser
+
+  constructor() {
+    this.browser = PuppeteerManager.browser;
+  }
 
   async generatePDF(req: Request) {
     const { id, tipo } = req.params;
@@ -32,26 +38,31 @@ class PDFService {
     if (typeof res.data !== "object")
       throw new StatusError("Formato de datos no válido", 400);
 
+    const cacheKey = `pdf_${tipo}_${id}`;
+
+    // Verifica si el PDF ya existe en caché
+    if (pdfCache[cacheKey]) {
+      return pdfCache[cacheKey];
+    }
+
     try {
       const ejsTemplate = await fs.readFile(templatePath, "utf-8");
       // Renderiza el contrato EJS con los datos
       const html = ejs.render(ejsTemplate, res.data);
       // Crea un navegador Puppeteer
-      const browser = await puppeteer.launch({
-        headless: "new",
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      });
+      if (!this.browser) {
+        await PuppeteerManager.init();
+        this.browser = PuppeteerManager.browser;
+      }
 
-      // Abre una nueva página
-      const page = await browser.newPage();
+      const page = await this.browser!.newPage();
 
       await page.setContent(html);
 
       // Genera el PDF
       const pdfBuffer = await page.pdf({ format: "A4" });
 
-      // Cierra el navegador Puppeteer
-      await browser.close();
+      pdfCache[cacheKey] = pdfBuffer;
 
       return pdfBuffer;
     } catch (err: any) {

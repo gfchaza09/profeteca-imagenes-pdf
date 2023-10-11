@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import path from "path";
 import fs from "fs";
+import cron from "node-cron";
 
 // Importacion de Router
 import router from "./routers/index.routes";
@@ -12,6 +13,7 @@ import { logInfo } from "./loggers/index";
 
 import { StatusError } from "./classes/StatusError";
 import connectDB from "./database/database";
+import { cleanupCache } from "./utils/cache";
 
 //------------------------------------------------------------------------
 // server
@@ -84,5 +86,11 @@ app.use(
 // Conexión a la base de datos MongoDB
 connectDB();
 //-------------------------------------------
+
+// cronjob para borrar la cache de imagenes y pdf
+cron.schedule("0 0 * * 0", (): void => {
+  cleanupCache();
+});
+// --------------------------------------------
 
 export default app;
