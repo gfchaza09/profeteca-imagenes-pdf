@@ -140,7 +140,7 @@ class ImagenService {
           </html>
         `;
 
-      await page.setContent(htmlContent);
+      await page.setContent(htmlContent, { waitUntil: "networkidle2" });
 
       // Captura una captura de pantalla de la página
       const screenshot = await page.screenshot();
