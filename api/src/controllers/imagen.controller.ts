@@ -10,11 +10,8 @@ class ImagenController {
   async getImage(req: Request, res: Response, next: NextFunction) {
     try {
       const data = await ImagenService.getImage(req);
-      res.writeHead(200, {
-        "Content-Type": "image/jpeg",
-        "Content-Length": data.length,
-      });
-      res.end(data);
+      res.writeHead(302, { Location: data });
+      res.end();
     } catch (err: StatusError | unknown) {
       logError(err);
       logWarning(`${req.method} ${req.originalUrl} ${res.statusCode}`);

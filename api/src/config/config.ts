@@ -22,6 +22,10 @@ const config: Config = {
     PASSWORD: process.env.AUTH_PASSWORD ?? "",
   },
   API_DATA_URL: process.env.API_DATA_URL ?? "",
+  htmlCssToImage: {
+    HTMLTOCSSIMAGE_USER_ID: process.env.HTMLTOCSSIMAGE_USER_ID ?? "",
+    HTMLTOCSSIMAGE_API_KEY: process.env.HTMLTOCSSIMAGE_API_KEY ?? "",
+  },
 };
 
 export default config;

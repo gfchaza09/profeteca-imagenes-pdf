@@ -6,6 +6,7 @@ export interface Config {
   SECRET_KEY: string;
   auth: Auth;
   API_DATA_URL: string;
+  htmlCssToImage: HtmlCssToImage;
 }
 
 export interface MongoDb {
@@ -22,4 +23,9 @@ export interface MongoDbOptions {
 export interface Auth {
   USER: string;
   PASSWORD: string;
+}
+
+export interface HtmlCssToImage {
+  HTMLTOCSSIMAGE_USER_ID: string;
+  HTMLTOCSSIMAGE_API_KEY: string;
 }

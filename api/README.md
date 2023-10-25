@@ -49,6 +49,8 @@ AUTH_USER=  # Usuario de administrador. Necesario para iniciar sesión en la apl
 AUTH_PASSWORD= # Contraseña de administrador. Necesario para iniciar sesión en la aplicación.
 SECRET_KEY= # Secret key para generar token de autenticación.
 API_DATA_URL= # Url para solicitar data para la creación de los PDF. Se debe incluir todo el url, menos los IDs que solicitarán la información, los mismos se agregan de forma dinámica en el servicio de generación de PDF.
+HTMLTOCSSIMAGE_USER_ID= #User ID de HCTI API
+HTMLTOCSSIMAGE_API_KEY= #Api key de HCTI API
 ```
 
 <a name="endpoints"></a>

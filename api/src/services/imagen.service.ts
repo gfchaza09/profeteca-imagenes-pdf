@@ -1,5 +1,6 @@
 import fs from "fs";
 import sizeOf from "image-size";
+import axios from "axios";
 import { Browser } from "puppeteer";
 import { Request } from "express";
 import { isValidObjectId } from "mongoose";
@@ -9,15 +10,9 @@ import { cleanHTML } from "../utils/cleanerText";
 import tipoModel from "../models/tipo.model";
 import imagenModel from "../models/imagen.model";
 import { imageCache } from "../utils/cache";
-import PuppeteerManager from "../classes/PuppeteerManager";
+import config from "../config/config";
 
 class ImagenService {
-  browser: Browser | null;
-
-  constructor() {
-    this.browser = PuppeteerManager.browser;
-  }
-
   async getImage(req: Request) {
     const { text1, text2, tipo } = req.params;
 
@@ -77,47 +72,6 @@ class ImagenService {
               <link rel="preconnect" href="https://fonts.googleapis.com">
               <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
               <link href="${cssConfig.fontFamilyUrl}" rel="stylesheet">
-              <style>
-              body {
-                margin: 0;
-                padding: 0;
-              }
-              img {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-              }
-              .text1 {
-                  position: absolute;
-                  top: ${cssConfig.text1.top};
-                  left: ${cssConfig.text1.left};
-                  font-family: ${cssConfig.text1.fontFamily};
-                  color: ${cssConfig.text1.textColor};
-                  font-size: ${cssConfig.text1.fontSize};
-                  font-weight: ${cssConfig.text1.fontWeight};
-                  font-style: ${cssConfig.text1.fontStyle};
-                  letter-spacing: ${cssConfig.text1.letterSpacing};
-                  line-height: ${cssConfig.text1.lineHeight};
-                  text-align: ${cssConfig.text1.textAlign};
-                  text-shadow: ${cssConfig.text1.textShadow};
-                }
-                .text2 {
-                  position: absolute;
-                  top: ${cssConfig.text2.top};
-                  left: ${cssConfig.text2.left};
-                  font-family: ${cssConfig.text2.fontFamily};
-                  color: ${cssConfig.text2.textColor};
-                  font-size: ${cssConfig.text2.fontSize};
-                  font-weight: ${cssConfig.text2.fontWeight};
-                  font-style: ${cssConfig.text2.fontStyle};
-                  letter-spacing: ${cssConfig.text2.letterSpacing};
-                  line-height: ${cssConfig.text2.lineHeight};
-                  text-align: ${cssConfig.text2.textAlign};
-                  text-shadow: ${cssConfig.text2.textShadow};
-                }
-              </style>
             </head>
             <body>
               <img src="data:image/jpeg;base64,${imageBase64}" alt="bg" />
@@ -127,18 +81,67 @@ class ImagenService {
           </html>
         `;
 
-      if (!PuppeteerManager.cluster) {
-        await PuppeteerManager.initCluster();
+      const cssContent = `
+      body {
+        margin: 0;
+        padding: 0;
       }
-      const screenshot = await PuppeteerManager.cluster!.execute({
-        htmlContent,
-        originalWidth,
-        originalHeight,
-      });
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .text1 {
+          position: absolute;
+          top: ${cssConfig.text1.top};
+          left: ${cssConfig.text1.left};
+          font-family: ${cssConfig.text1.fontFamily};
+          color: ${cssConfig.text1.textColor};
+          font-size: ${cssConfig.text1.fontSize};
+          font-weight: ${cssConfig.text1.fontWeight};
+          font-style: ${cssConfig.text1.fontStyle};
+          letter-spacing: ${cssConfig.text1.letterSpacing};
+          line-height: ${cssConfig.text1.lineHeight};
+          text-align: ${cssConfig.text1.textAlign};
+          text-shadow: ${cssConfig.text1.textShadow};
+        }
+        .text2 {
+          position: absolute;
+          top: ${cssConfig.text2.top};
+          left: ${cssConfig.text2.left};
+          font-family: ${cssConfig.text2.fontFamily};
+          color: ${cssConfig.text2.textColor};
+          font-size: ${cssConfig.text2.fontSize};
+          font-weight: ${cssConfig.text2.fontWeight};
+          font-style: ${cssConfig.text2.fontStyle};
+          letter-spacing: ${cssConfig.text2.letterSpacing};
+          line-height: ${cssConfig.text2.lineHeight};
+          text-align: ${cssConfig.text2.textAlign};
+          text-shadow: ${cssConfig.text2.textShadow};
+        }`;
 
-      imageCache[cacheKey] = screenshot;
+      const res = await axios.post(
+        "https://hcti.io/v1/image",
+        {
+          html: htmlContent,
+          css: cssContent,
+          viewport_width: originalWidth,
+          viewport_height: originalHeight,
+        },
+        {
+          headers: {
+            Authorization: `Basic ${Buffer.from(
+              `${config.htmlCssToImage.HTMLTOCSSIMAGE_USER_ID}:${config.htmlCssToImage.HTMLTOCSSIMAGE_API_KEY}`
+            ).toString("base64")}`,
+          },
+        }
+      );
 
-      return screenshot;
+      imageCache[cacheKey] = res.data.url;
+
+      return res.data.url;
     } catch (err: any) {
       console.log(err.message);
       if (err.code === "ENOENT") {
