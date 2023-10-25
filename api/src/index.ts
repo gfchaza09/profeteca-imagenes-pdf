@@ -2,7 +2,6 @@ import { createServer } from "http";
 import config from "./config/config";
 import { logError, logInfo } from "./loggers/index";
 import app from "./server";
-import ImagenService from "./services/imagen.service";
 import { cleanupCache } from "./utils/cache";
 import PuppeterManager from "./classes/PuppeteerManager";
 

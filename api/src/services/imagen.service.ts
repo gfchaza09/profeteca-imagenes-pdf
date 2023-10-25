@@ -58,19 +58,6 @@ class ImagenService {
 
       const { width: originalWidth, height: originalHeight } = dimensions;
 
-      if (!this.browser) {
-        await PuppeteerManager.init();
-        this.browser = PuppeteerManager.browser;
-      }
-
-      const page = await this.browser!.newPage();
-
-      // Configurar el tamaño de la página para que se adapte a las dimensiones de la imagen
-      await page.setViewport({
-        width: originalWidth || 800, // Por defecto width: 800
-        height: originalHeight || 600, // Por defecto height: 800
-        deviceScaleFactor: 1,
-      });
       const imageBuffer = fs.readFileSync(imagePath);
       const imageBase64 = imageBuffer.toString("base64");
       // Reemplaza "-" por "/", "+" por ".", "%0A" por "<br>"
@@ -140,10 +127,14 @@ class ImagenService {
           </html>
         `;
 
-      await page.setContent(htmlContent, { waitUntil: "networkidle2" });
-
-      // Captura una captura de pantalla de la página
-      const screenshot = await page.screenshot();
+      if (!PuppeteerManager.cluster) {
+        await PuppeteerManager.initCluster();
+      }
+      const screenshot = await PuppeteerManager.cluster!.execute({
+        htmlContent,
+        originalWidth,
+        originalHeight,
+      });
 
       imageCache[cacheKey] = screenshot;
 
