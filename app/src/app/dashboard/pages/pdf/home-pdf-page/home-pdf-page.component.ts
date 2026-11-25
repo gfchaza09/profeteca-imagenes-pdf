@@ -28,7 +28,7 @@ export class HomePdfPageComponent implements OnInit {
   public loading: boolean = false;
 
   ngOnInit(): void {
-    this.titleService.setTitle('Generar PDF - Trami-Imagenes/PDF');
+    this.titleService.setTitle('Generar PDF - Profeteca Imágenes');
     this.getTemplatesList();
   }
 

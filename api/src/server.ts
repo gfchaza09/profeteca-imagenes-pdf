@@ -12,6 +12,7 @@ import notFoundRouter from "./routers/notFound.routes";
 import { logInfo } from "./loggers/index";
 
 import { StatusError } from "./classes/StatusError";
+import config from "./config/config";
 import connectDB from "./database/database";
 import { cleanupCache } from "./utils/cache";
 
@@ -33,7 +34,7 @@ app.use((req, res, next): void => {
 });
 
 app.get("/api", (req: Request, res: Response) => {
-  res.send("Bienvenido a la API de Trami-Imagenes/PDF!");
+  res.send("Bienvenido a la API de Profeteca Imágenes/PDF!");
 });
 
 // Router Api
@@ -83,8 +84,12 @@ app.use(
 );
 //--------------------------------------------
 
-// Conexión a la base de datos MongoDB
-connectDB();
+// Conexión a la base de datos MongoDB (opcional)
+if (config.mongodb.enabled) {
+  connectDB();
+} else {
+  logInfo("MongoDB desactivado (MONGODB_ENABLED=false)");
+}
 //-------------------------------------------
 
 // cronjob para borrar la cache de imagenes y pdf

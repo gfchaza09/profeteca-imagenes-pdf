@@ -10,6 +10,7 @@ export interface Config {
 }
 
 export interface MongoDb {
+  enabled: boolean;
   mongoUrl: string;
   options: MongoDbOptions;
 }

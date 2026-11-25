@@ -1,0 +1,23 @@
+.editor-root {
+  min-height: calc(100vh - 72px);
+  background: #eef2ff;
+}
+
+.editor-body {
+  min-height: 0;
+}
+
+.canvas-viewport {
+  overflow: auto;
+  background: repeating-conic-gradient(#e2e8f0 0% 25%, #f8fafc 0% 50%) 50% / 20px 20px;
+}
+
+.canvas-scale-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.canvas-inner {
+  transform-origin: top left;
+  box-shadow: 0 8px 32px rgba(19, 27, 46, 0.12);
+}

@@ -1,0 +1,149 @@
+<aside class="editor-properties p-3">
+  <h6 class="text-uppercase text-muted small mb-3">Propiedades</h6>
+
+  <p class="text-muted small" *ngIf="!hasSelection">Seleccioná un elemento en el lienzo.</p>
+
+  <div *ngIf="hasSelection" class="d-flex flex-column gap-2">
+    <div class="btn-group btn-group-sm">
+      <button type="button" class="btn btn-outline-secondary" (click)="duplicate.emit()">Duplicar</button>
+      <button type="button" class="btn btn-outline-danger" (click)="delete.emit()">Eliminar</button>
+    </div>
+    <div class="btn-group btn-group-sm">
+      <button type="button" class="btn btn-outline-secondary" (click)="bringForward.emit()">Adelante</button>
+      <button type="button" class="btn btn-outline-secondary" (click)="sendBackward.emit()">Atrás</button>
+    </div>
+
+    <ng-container *ngIf="isImage && imageProps">
+      <label class="form-label small mb-0">Radio de esquinas (px)</label>
+      <input
+        type="range"
+        class="form-range"
+        min="0"
+        [max]="imageProps.maxBorderRadius"
+        step="1"
+        [value]="imageProps.borderRadius"
+        (input)="patchImage('borderRadius', +($any($event.target)).value)"
+      />
+      <input
+        type="number"
+        class="form-control form-control-sm"
+        min="0"
+        [max]="imageProps.maxBorderRadius"
+        [value]="imageProps.borderRadius"
+        (input)="patchImage('borderRadius', +($any($event.target)).value)"
+      />
+      <p class="text-muted small mb-1">0 = esquinas rectas</p>
+      <div class="btn-group btn-group-sm flex-wrap">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          *ngFor="let r of radiusPresets"
+          (click)="setRadiusPreset(r)"
+        >
+          {{ r }}px
+        </button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isText && textProps">
+      <label class="form-label small mb-0">Contenido</label>
+      <textarea
+        class="form-control form-control-sm"
+        rows="4"
+        [value]="textProps.text"
+        (input)="patch('text', ($any($event.target)).value)"
+      ></textarea>
+
+      <label class="form-label small mb-0">Tamaño</label>
+      <input
+        type="number"
+        class="form-control form-control-sm"
+        min="8"
+        max="200"
+        [value]="textProps.fontSize"
+        (input)="patch('fontSize', +($any($event.target)).value)"
+      />
+
+      <label class="form-label small mb-0">Fuente</label>
+      <select
+        class="form-select form-select-sm"
+        [value]="textProps.fontFamily"
+        (change)="patch('fontFamily', ($any($event.target)).value)"
+      >
+        <option *ngFor="let f of fonts" [value]="f">{{ f }}</option>
+      </select>
+
+      <label class="form-label small mb-0">Color</label>
+      <input
+        type="color"
+        class="form-control form-control-color form-control-sm"
+        [value]="textProps.fill"
+        (input)="patch('fill', ($any($event.target)).value)"
+      />
+
+      <label class="form-label small mb-0">Ancho del área</label>
+      <input
+        type="number"
+        class="form-control form-control-sm"
+        min="80"
+        [value]="textProps.width"
+        (input)="patch('width', +($any($event.target)).value)"
+      />
+
+      <label class="form-label small mb-0">Interlineado</label>
+      <input
+        type="number"
+        step="0.05"
+        class="form-control form-control-sm"
+        min="0.8"
+        max="3"
+        [value]="textProps.lineHeight"
+        (input)="patch('lineHeight', +($any($event.target)).value)"
+      />
+
+      <label class="form-label small mb-0">Interletraje (em)</label>
+      <input
+        type="number"
+        step="0.01"
+        class="form-control form-control-sm"
+        min="-0.15"
+        max="0.2"
+        [value]="textProps.letterSpacingEm"
+        (input)="patch('letterSpacingEm', +($any($event.target)).value)"
+      />
+      <p class="text-muted small mb-0">-0.02 ≈ título Profeteca</p>
+
+      <label class="form-label small mb-0">Alineación</label>
+      <select
+        class="form-select form-select-sm"
+        [value]="textProps.textAlign"
+        (change)="patch('textAlign', ($any($event.target)).value)"
+      >
+        <option value="left">Izquierda</option>
+        <option value="center">Centro</option>
+        <option value="right">Derecha</option>
+      </select>
+
+      <div class="btn-group btn-group-sm">
+        <button
+          type="button"
+          class="btn"
+          [class.btn-primary]="textProps.fontWeight === '700'"
+          [class.btn-outline-secondary]="textProps.fontWeight !== '700'"
+          (click)="toggleBold()"
+        >
+          Negrita
+        </button>
+        <button
+          type="button"
+          class="btn"
+          [class.btn-primary]="textProps.fontStyle === 'italic'"
+          [class.btn-outline-secondary]="textProps.fontStyle !== 'italic'"
+          (click)="toggleItalic()"
+        >
+          Cursiva
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</aside>

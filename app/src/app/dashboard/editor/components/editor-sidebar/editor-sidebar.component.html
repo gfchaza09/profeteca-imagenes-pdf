@@ -1,0 +1,53 @@
+<aside class="editor-sidebar p-3 d-flex flex-column gap-3">
+  <section>
+    <h6 class="text-uppercase text-muted small mb-2">Plantillas</h6>
+    <button type="button" class="btn btn-sm btn-outline-primary w-100 mb-2" (click)="applyBuiltInBackground.emit()">
+      Fondo Profeteca (base)
+    </button>
+    <ul class="list-group list-group-flush small" *ngIf="templates.length">
+      <li class="list-group-item bg-transparent px-0" *ngFor="let t of templates">
+        <button type="button" class="btn btn-link btn-sm p-0 text-start" (click)="applyTemplate.emit(t)">
+          {{ t.name }}
+        </button>
+      </li>
+    </ul>
+    <p class="text-muted small mb-0" *ngIf="!templates.length">
+      Agregá PNG/JPEG en <code>assets/templates/</code> y actualizá <code>manifest.json</code>.
+    </p>
+  </section>
+
+  <section>
+    <h6 class="text-uppercase text-muted small mb-2">Fondo propio</h6>
+    <select class="form-select form-select-sm mb-2" [value]="backgroundFit" (change)="onFitChange($event)">
+      <option value="cover">Cubrir lienzo</option>
+      <option value="contain">Ajustar dentro</option>
+      <option value="stretch">Estirar</option>
+    </select>
+    <label class="btn btn-sm btn-outline-secondary w-100 mb-0">
+      Cargar imagen de fondo
+      <input type="file" accept="image/png,image/jpeg,image/webp" class="d-none" (change)="onBackgroundSelected($event)" />
+    </label>
+  </section>
+
+  <section>
+    <h6 class="text-uppercase text-muted small mb-2">Imágenes</h6>
+    <label class="btn btn-sm btn-primary w-100">
+      Agregar imagen
+      <input type="file" accept="image/png,image/jpeg,image/webp" class="d-none" (change)="onImageSelected($event)" />
+    </label>
+  </section>
+
+  <section>
+    <h6 class="text-uppercase text-muted small mb-2">Texto</h6>
+    <div class="d-grid gap-1">
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-dark text-start"
+        *ngFor="let preset of textPresets"
+        (click)="addText.emit(preset.id)"
+      >
+        {{ preset.label }}
+      </button>
+    </div>
+  </section>
+</aside>

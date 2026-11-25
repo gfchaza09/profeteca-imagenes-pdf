@@ -27,7 +27,7 @@ export class UploadImagePageComponent implements OnInit {
   public images: Image[] | null = [];
 
   ngOnInit(): void {
-    this.titleService.setTitle('Imagenes - Trami-Imagenes/PDF');
+    this.titleService.setTitle('Imagenes - Profeteca Imágenes');
     this.getImagesList();
   }
 

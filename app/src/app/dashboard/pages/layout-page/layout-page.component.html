@@ -1,4 +1,12 @@
 <div class="col sm:col-6">
   <shared-navbar />
+  <div
+    class="alert alert-warning mx-3 mt-2 mb-0 py-2 small"
+    *ngIf="showPdfDbNotice$ | async"
+    role="status"
+  >
+    El módulo PDF necesita MongoDB activo en la API (<code>MONGODB_ENABLED=true</code>).
+    Ver <code>docs/PERSISTENCE.md</code>.
+  </div>
   <router-outlet />
 </div>

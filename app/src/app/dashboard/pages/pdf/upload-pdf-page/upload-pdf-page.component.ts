@@ -26,7 +26,7 @@ export class UploadPdfPageComponent implements OnInit {
   public variableForm: FormGroup = this.fb.group({});
 
   ngOnInit(): void {
-    this.titleService.setTitle('Cargar Template - Trami-Imagenes/PDF');
+    this.titleService.setTitle('Cargar Template - Profeteca Imágenes');
 
     this.addVariable();
   }

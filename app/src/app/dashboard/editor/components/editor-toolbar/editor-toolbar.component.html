@@ -1,0 +1,37 @@
+<div class="editor-toolbar px-3 py-2 d-flex flex-wrap align-items-center gap-2">
+  <span class="fw-semibold text-primary me-2">Editor de publicaciones</span>
+
+  <select
+    class="form-select form-select-sm w-auto"
+    [value]="formatId"
+    (change)="onFormatChange($event)"
+    aria-label="Formato del lienzo"
+  >
+    <option *ngFor="let f of formats" [value]="f.id">{{ f.label }}</option>
+  </select>
+
+  <button type="button" class="btn btn-sm btn-outline-secondary" (click)="newDesign.emit()">
+    Nuevo diseño
+  </button>
+
+  <div class="btn-group btn-group-sm">
+    <button type="button" class="btn btn-outline-secondary" [disabled]="!canUndo" (click)="undo.emit()">
+      Deshacer
+    </button>
+    <button type="button" class="btn btn-outline-secondary" [disabled]="!canRedo" (click)="redo.emit()">
+      Rehacer
+    </button>
+  </div>
+
+  <div class="ms-auto d-flex flex-wrap gap-2">
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="importJson.emit()">
+      Importar JSON
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="exportJson.emit()">
+      Exportar JSON
+    </button>
+    <button type="button" class="btn btn-sm btn-primary" (click)="exportPng.emit()">
+      Descargar PNG
+    </button>
+  </div>
+</div>

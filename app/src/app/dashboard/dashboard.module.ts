@@ -14,6 +14,11 @@ import { ConfigTableComponent } from './components/config-table/config-table.com
 import { HomePdfPageComponent } from './pages/pdf/home-pdf-page/home-pdf-page.component';
 import { UploadPdfPageComponent } from './pages/pdf/upload-pdf-page/upload-pdf-page.component';
 import { ListPdfPageComponent } from './pages/pdf/list-pdf-page/list-pdf-page.component';
+import { EditorPageComponent } from './pages/editor/editor-page.component';
+import { EditorToolbarComponent } from './editor/components/editor-toolbar/editor-toolbar.component';
+import { EditorSidebarComponent } from './editor/components/editor-sidebar/editor-sidebar.component';
+import { EditorPropertiesComponent } from './editor/components/editor-properties/editor-properties.component';
+import { EditorLayersComponent } from './editor/components/editor-layers/editor-layers.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +31,11 @@ import { ListPdfPageComponent } from './pages/pdf/list-pdf-page/list-pdf-page.co
     HomePdfPageComponent,
     UploadPdfPageComponent,
     ListPdfPageComponent,
+    EditorPageComponent,
+    EditorToolbarComponent,
+    EditorSidebarComponent,
+    EditorPropertiesComponent,
+    EditorLayersComponent,
   ],
   imports: [
     CommonModule,

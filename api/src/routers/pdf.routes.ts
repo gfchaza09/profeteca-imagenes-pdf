@@ -1,8 +1,10 @@
 import { Router } from "express";
 import PDFController from "../controllers/pdf.controller";
-import { verificarToken } from "../middlewares/auth";
+import { requireDb } from "../middlewares/requireDb";
 
 const pdfRouter = Router();
+
+pdfRouter.use(requireDb);
 
 // [GET] 🌐/pdf/:tipo/:id/doc.pdf
 pdfRouter.get("/:tipo/:id/doc.pdf", PDFController.getPDF);

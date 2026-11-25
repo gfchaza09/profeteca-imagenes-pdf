@@ -8,12 +8,17 @@ import { ConfigImagePageComponent } from './pages/image/config-image-page/config
 import { HomePdfPageComponent } from './pages/pdf/home-pdf-page/home-pdf-page.component';
 import { UploadPdfPageComponent } from './pages/pdf/upload-pdf-page/upload-pdf-page.component';
 import { ListPdfPageComponent } from './pages/pdf/list-pdf-page/list-pdf-page.component';
+import { EditorPageComponent } from './pages/editor/editor-page.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutPageComponent,
     children: [
+      {
+        path: '',
+        component: EditorPageComponent,
+      },
       {
         path: 'image/home',
         component: HomeImagePageComponent,
@@ -40,7 +45,7 @@ const routes: Routes = [
       },
       {
         path: '**',
-        redirectTo: 'image/home',
+        redirectTo: '',
       },
     ],
   },

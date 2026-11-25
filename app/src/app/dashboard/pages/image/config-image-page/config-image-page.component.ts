@@ -60,7 +60,7 @@ export class ConfigImagePageComponent implements OnInit {
   public previewHTML: any = '';
 
   ngOnInit(): void {
-    this.titleService.setTitle('Configuraciones - Trami-Imagenes/PDF');
+    this.titleService.setTitle('Configuraciones - Profeteca Imágenes');
     this.apiService.getImages().subscribe((images) => {
       this.images = images;
     });

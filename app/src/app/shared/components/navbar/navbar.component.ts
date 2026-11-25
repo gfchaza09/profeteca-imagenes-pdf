@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { environment } from 'src/environments/environments';
 
 interface MenuItem {
   title: string;
@@ -17,23 +18,8 @@ interface MenuItem {
 export class NavbarComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
-  public imageItems: MenuItem[] = [
-    {
-      title: 'Generar Imagen',
-      icon: 'fas fa-download',
-      route: '/dashboard/image/home',
-    },
-    {
-      title: 'Carga Imagen',
-      icon: 'fas fa-upload',
-      route: '/dashboard/image/upload',
-    },
-    {
-      title: 'Configuraciones',
-      icon: 'fas fa-clipboard-check',
-      route: '/dashboard/image/config',
-    },
-  ];
+
+  public localMode = environment.localMode;
 
   public pdfItems: MenuItem[] = [
     {
@@ -42,7 +28,7 @@ export class NavbarComponent {
       route: '/dashboard/pdf/home',
     },
     {
-      title: 'Carga Templates',
+      title: 'Cargar Templates',
       icon: 'fas fa-upload',
       route: '/dashboard/pdf/upload',
     },

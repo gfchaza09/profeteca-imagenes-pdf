@@ -2,8 +2,11 @@ import { Router } from "express";
 import UploadController from "../controllers/upload.controller";
 import { uploadImage, uploadJSON, uploadTemplate } from "../middlewares/multer";
 import { verificarToken } from "../middlewares/auth";
+import { requireDb } from "../middlewares/requireDb";
 
 const uploadRouter = Router();
+
+uploadRouter.use(requireDb);
 
 // [GET] 🌐/api/uploads/bg
 uploadRouter.get("/bg", verificarToken, UploadController.getImages);

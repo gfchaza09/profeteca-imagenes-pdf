@@ -25,7 +25,7 @@ export class LoginPageComponent {
   });
 
   constructor() {
-    this.titleService.setTitle('Login - Trami-Imagenes/PDF');
+    this.titleService.setTitle('Login - Profeteca Imágenes');
   }
 
   isValidField(field: string): boolean {

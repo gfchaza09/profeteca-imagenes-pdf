@@ -1,5 +1,5 @@
 {
-  "name": "trami-imagenes-pdf",
+  "name": "profeteca-imagenes-api",
   "version": "1.0.0",
   "description": "Generador de imagenes y pdf personalizados",
   "main": "index.js",

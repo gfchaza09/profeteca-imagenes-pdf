@@ -8,6 +8,7 @@ const config: Config = {
   PORT: parseInt(process.env.PORT ?? "8080"),
   PERS: process.env.PERS ?? "mongodb",
   mongodb: {
+    enabled: (process.env.MONGODB_ENABLED ?? "false").toLowerCase() === "true",
     mongoUrl: process.env.MONGO_URI ?? "",
     options: {
       useNewUrlParser: true,

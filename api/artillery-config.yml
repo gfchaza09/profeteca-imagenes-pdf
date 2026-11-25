@@ -1,0 +1,10 @@
+config:
+  target: "http://localhost:8080"
+  phases:
+    - duration: 1 # Duración total del escenario en minutos
+      arrivalRate: 200 # Número constante de usuarios virtuales por segundo
+
+scenarios:
+  - flow:
+      - get:
+          url: "/imagen/6504650bc2eaee4d17fc5e92/Gabriel%0Ate esperamos/A las 08-09-2023 16:00/img.jpg"

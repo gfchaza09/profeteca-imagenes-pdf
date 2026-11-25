@@ -45,7 +45,7 @@ export class HomeImagePageComponent implements OnInit {
   public loading: boolean = false;
 
   ngOnInit(): void {
-    this.titleService.setTitle('Generar Imagen - Trami-Imagenes/PDF');
+    this.titleService.setTitle('Generar Imagen - Profeteca Imágenes');
     this.getConfigsList();
   }
 

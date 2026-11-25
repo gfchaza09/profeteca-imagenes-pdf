@@ -34,7 +34,7 @@ export class ListPdfPageComponent implements OnInit {
   public limit: number = 20;
 
   ngOnInit(): void {
-    this.titleService.setTitle('Lista Templates - Trami-Imagenes/PDF');
+    this.titleService.setTitle('Lista Templates - Profeteca Imágenes');
 
     this.getTemplatesList();
   }
